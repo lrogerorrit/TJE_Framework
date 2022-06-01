@@ -34,6 +34,9 @@ public:
 	void renderPlayer();
 	void updatePlayer(double seconds_elapsed);
 	void applyMovementForce(eDirection direction,double seconds_elapsed);
+
+	void testCollisionsChildren(double seconds_elapsed, Vector3 oldpos, Entity* root, Vector3& SpeedVector);
+
 	
 };
 

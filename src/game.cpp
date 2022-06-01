@@ -360,3 +360,8 @@ void Game::setActiveStage(Stage* stage)
 	this->activeStage = stage;
 }
 
+Scene* Game::getActiveScene()
+{
+	return activeScene;
+}
+

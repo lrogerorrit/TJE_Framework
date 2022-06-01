@@ -2,7 +2,8 @@
 #include "input.h"
 #include "game.h"
 #include "TrainHandler.h"
-
+#include "Scene.h"
+#include "entities/EntityInclude.h"
 
 
 const float maxSpeed=10;
@@ -142,6 +143,10 @@ void Player::updatePlayer(double seconds_elapsed)
 		
 		
 	}
+
+	//Collision check
+	Entity* root = Game::instance->activeScene->getRoot();
+	testCollisionsChildren(seconds_elapsed, oldPos, root, speedVector);
 	
 
 	if (!wasMoved||(distanceFromCar> ropeLengthRadius* decel_threshold &&movingAway)||distanceFromCar>ropeLengthRadius) {
@@ -178,6 +183,27 @@ void Player::updatePlayer(double seconds_elapsed)
 
 void Player::applyMovementForce(eDirection direction, double seconds_elapsed)
 {
+
+}
+
+void Player::testCollisionsChildren(double seconds_elapsed, Vector3 oldpos, Entity* root, Vector3& SpeedVector )
+{
+	int numChildren = root->children.size();
+	for (int i = 0; i < numChildren; i++) {
+		if(root->children[i]->getShouldRenderEntity()) 
+			testCollisionsChildren(seconds_elapsed, oldpos, root->children[i], SpeedVector);
+	}
+
+	Vector3 char_center = playerMesh->getPosition();
+	Vector3 colP, colNorm;
+	Mesh* pMesh = playerMesh->mesh;
+	int radius = 5;
+
+	if (pMesh->testSphereCollision(root->getGlobalMatrix(), char_center, radius, colP, colNorm) == false)
+		return;
+	Vector3 pushAway = normalize(colP - char_center) * seconds_elapsed;
+	playerMesh->setPosition(oldpos - pushAway);
+	speedVector = reflect(speedVector, colNorm) * 0.95;
 
 }
 

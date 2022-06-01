@@ -64,6 +64,7 @@ public:
 	void addToDestroyQueue(Entity* ent);
 	void setActiveScene(Scene* scene);
 	void setActiveStage(Stage* stage);
+	Scene* getActiveScene();
 };
 
 
