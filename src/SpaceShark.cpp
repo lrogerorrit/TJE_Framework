@@ -6,12 +6,13 @@
 #include "shader.h"
 #include "extra/easing.h"
 
-Vector2 idleTimes(10, 30);
+Vector2 idleTimes(200, 500);//(10, 30);
 Vector2 attackTimes(200, 500);//(20, 60);
 Vector2 backStageTimes(10, 30);
 
 float sharkLerpPos = 0;
 int sharkDisplDirection = 1;
+
 
 
 
@@ -32,13 +33,19 @@ SpaceShark::SpaceShark():trainHandler(TrainHandler::instance)
 
 void SpaceShark::generateNewPosition() {
 	this->rightSide = (bool) randomIntRange(0, 1);
-	float sideSeparation = randomIntRange(50, 200);
+	int sideSeparation = randomIntRange(50, 200);
 	this->height = 0;
 	float displacement= randomIntRange(-50, 50);
 	
-	Vector3 trainPos = this->trainHandler->getCarPosition(0);
+	this->rightDisplacement = sideSeparation;
+	Matrix44 trainDirPos = trainHandler->getCarDirPos(0);
+	Vector3 trainPos = trainDirPos.getTranslation();
+	Vector3 right = trainDirPos.rightVector();
+	Vector3 front= trainDirPos.frontVector();
+	
 	Vector2 trainPos2D(trainPos.x, trainPos.z);
-	this->position = trainPos2D + (Vector2(displacement, sideSeparation * (this->rightSide ? 1 : -1)));
+	Vector3 pos = trainPos + right * (sideSeparation * (this->rightSide ? 1 : -1)) + front * displacement;
+	this->position = Vector2(pos.x, pos.z); //trainPos2D + (Vector2(displacement, sideSeparation * (this->rightSide ? 1 : -1)));
 	this->meshEntity->setPosition(Vector3(this->position.x, trainPos.y + this->height, this->position.y));
 	this->meshEntity->modifyScale(.03);
 	this->train_separation= (this->position - trainPos2D).length();
@@ -54,6 +61,28 @@ void SpaceShark::updateIdle(double deltaTime)
 		//TODO: Set position of shark near train, but far enough;
 		generateNewPosition();
 	}
+
+	idleDisplacement+= 1 * deltaTime*idleDisplacementDir*(speed*2);
+	if (abs(idleDisplacement) >= 1)
+		idleDisplacementDir *= -1;
+
+	
+	
+	Matrix44 trainDirPos = trainHandler->getCarDirPos(0);
+	Vector3 trainPos = trainDirPos.getTranslation();
+	Vector3 right = trainDirPos.rightVector();
+	Vector3 front= trainDirPos.frontVector();
+	Vector3 up = right.cross(front);
+	Vector2 trainPos2D(trainPos.x, trainPos.z);
+	Vector3 pos = trainPos + right * (rightDisplacement * (this->rightSide ? 1 : -1)) + front * (this->idleDisplacement*this->maxRightDisplacement);
+	
+	
+	
+	this->position = Vector2(pos.x, pos.z);
+	this->train_separation = (this->position - trainPos2D).length();
+
+	this->meshEntity->setPosition(pos);
+	this->meshEntity->modifyScale(.1);
 	
 }
 
@@ -64,8 +93,8 @@ void SpaceShark::updateAttack(double deltaTime)
 	navigateToTrain(deltaTime);
 	
 	//Change stage
-	if((timeInStage > attackTimes.y) || ((timeInStage > attackTimes.x) && (randomInt() >= 7)))
-		this->setState(eSharkState::RETREAT);
+	if ((timeInStage > attackTimes.y) || ((timeInStage > attackTimes.x) && (randomInt() >= 7)))
+		this->setState(eSharkState::IDLE);//RETREAT);
 }
 
 void SpaceShark::updateRetreat(double deltaTime)

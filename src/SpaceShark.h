@@ -20,7 +20,7 @@ private:
 	
 	TrainHandler* trainHandler=NULL;
 	
-	eSharkState state = eSharkState::ATTACK;//IDLE;
+	eSharkState state = eSharkState::IDLE;
 	
 	float lastAttackTime = 0;
 	float timeInStage = 0.0;
@@ -34,6 +34,11 @@ private:
 	
 	bool rightSide = true;
 	float train_separation = 40.0f;
+
+	float idleDisplacement = 0;
+	float idleDisplacementDir = 1;
+	float rightDisplacement = 0;
+	float maxRightDisplacement = 40;
 
 
 	void generateNewPosition();

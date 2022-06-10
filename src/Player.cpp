@@ -148,18 +148,18 @@ void Player::updatePlayer(double seconds_elapsed)
 	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/) {
 		
 		
-		std::cout << "In train ";
+		
 		moveFront = Vector3(front.x, 0, front.z);
 		moveRight = Vector3(right.x, 0, right.z);
 		if ((oldPos.y - 15) > y_pos) {
-			std::cout << "Falling";
+			
 			acceleration = 1;
 			deceleration = 10;
 			speedVector += Vector3(0, -15, 0) * seconds_elapsed;
 			dontDecelY = true;
 		}
 		else {
-			std::cout << "Not falling";
+			
 			acceleration = 13;
 			deceleration = 40;
 			moveWithTrain = true;
@@ -170,7 +170,7 @@ void Player::updatePlayer(double seconds_elapsed)
 				speedVector = Vector3(speedVector.x, 0, speedVector.z);
 			
 		}
-		std::cout << std::endl;
+		
 	}
 	else {
 		acceleration = 10;// 0.05f;
