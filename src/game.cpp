@@ -17,6 +17,7 @@
 #include "TrainHandler.h"
 #include "CubeMap.h"
 #include "SpaceShark.h"
+#include <bass.h>
 
 
 //some globals
@@ -157,6 +158,12 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
 	st->initSpaceShark();
+
+	if (BASS_Init(-1, 44100, 0, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
+	{
+		//error abriendo la tarjeta de sonido...
+	}
+
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
