@@ -92,6 +92,9 @@
     <ClCompile Include="..\..\src\extra\SoundManager.cpp">
       <Filter>extra</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\extra\Audio.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -188,6 +191,9 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\extra\SoundManager.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\extra\Audio.h">
       <Filter>extra</Filter>
     </ClInclude>
   </ItemGroup>
