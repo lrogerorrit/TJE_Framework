@@ -31,6 +31,8 @@ public:
 	bool must_exit;
 	bool cameraLocked;
 
+	Player* player;
+
 	//some vars
 	Camera* camera; //our global camera
 	bool mouse_locked; //tells if the mouse is locked (not seen)

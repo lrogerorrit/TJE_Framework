@@ -72,7 +72,7 @@ HSAMPLE Audio::loadSample(const char* fileName)
 		//file not found
 		std::cout << "ERROR load " << fileName << std::endl;
 	}
-
+	this->sample = hSample;
 	std::cout << "+ AUDIO load " << fileName << std::endl;
 	return hSample;
 }
