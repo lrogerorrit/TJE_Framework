@@ -16,7 +16,10 @@
 #include "Player.h"
 #include "TrainHandler.h"
 #include "CubeMap.h"
+#include "extra/SceneParser.h"
+#include "stages/DepositionStage.h"
 #include "SpaceShark.h"
+
 
 
 //some globals
@@ -73,11 +76,11 @@ Scene* returnTestScene() {
 ProceduralWorldStage* testStage() {
 	ProceduralWorldStage* stage = new ProceduralWorldStage(returnTestScene(),trainHandler);
 
-	
-	
-	
 	return stage;
 }
+
+
+
 
 
 void loadTestCar(Game* game) {
@@ -86,17 +89,24 @@ void loadTestCar(Game* game) {
 	Stage* stage = game->activeStage;
 	//Entity* positionEntity = new Entity();
 	Entity* positionEntity = new Entity();
-	MeshEntity* trolleyEntity = new MeshEntity(trolleyMesh,trolleyTexture,shader);
+	MeshEntity* trolleyEntity = new MeshEntity(trolleyMesh,trolleyTexture,Shader::Get("data/shaders/basic.vs","data/shaders/rockShader.fs"));
 	
 	//trolleyEntity->ingoreCollision = true;
 	trolleyEntity->setCollisionMesh(Mesh::Get("data/assets/train/collisionMesh.obj"));
 	positionEntity->addChild(trolleyEntity);
-	stage->getScene()->getRoot()->addChild(positionEntity);
+	//stage->getScene()->getRoot()->addChild(positionEntity);
 	positionEntity->forceCheckChilds = true;
 	trainHandler->addCar(positionEntity,trolleyEntity);
 	trolleyEntity->maxRenderDist = 10000000000000;
 	trolleyEntity->modifyScale(10);
 	
+}
+
+DepositionStage* loadTestDepo() {
+	SceneParser* parser = SceneParser::instance;
+	Scene* sc= parser->parseFile("data/export.scene");
+	DepositionStage* stage = new DepositionStage(sc);
+	return stage;
 }
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
@@ -122,8 +132,10 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	camera->lookAt(Vector3(0.f,100.f, 100.f),Vector3(0.f,0.f,0.f), Vector3(0.f,1.f,0.f)); //position the camera and point to 0,0,0
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 	
+	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	new TrackHandler();
 	new CubeMap();
+	new SceneParser();
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
 	texture = new Texture();
  	texture->load("data/texture.tga");
@@ -134,29 +146,29 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	low_poly_mesh = Mesh::Get("data/sphereLow.obj");
 
 	// example of shader loading using the shaders manager
-	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	//this->setActiveScene(returnTestScene());
 	
 	
 
 	//Coses Uri																					///////////
-	Mesh* groundMesh = new Mesh();
-	groundMesh->createPlane(10000);
 	cameraLocked = FALSE;
 
-	ground = new MeshEntity(groundMesh,texture, shader);
-
+	
 	player = new Player();
+
+
 	
 	//End coses uri																				//////////
-	this->setActiveStage(testStage());
+
+	this->setActiveStage(loadTestDepo());
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
+	
 	//this->setActiveScene(returnTestScene());
 	
-	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	st->initSpaceShark();
+	//ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
+	//st->initSpaceShark();
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
