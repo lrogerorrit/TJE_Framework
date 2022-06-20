@@ -22,14 +22,13 @@ private:
 	TrainHandler* trainHandler=NULL;
 	
 	eSharkState state = eSharkState::IDLE;
+	eSharkState prevState = eSharkState::IDLE;
 
 
 	
 	
 	float lastAttackTime = 0;
 	float timeInStage = 0.0;
-	float scareLevels = 0.0;
-	int scared_times = 0;
 	
 	float speed = .3;
 
@@ -37,7 +36,7 @@ private:
 	bool inBackstage = false;
 	
 	bool rightSide = true;
-	float train_separation = 40.0f;
+	float train_separation = 60.0f;
 
 	
 
@@ -45,6 +44,19 @@ private:
 	
 	float maxRightDisplacement = 40;
 	
+	//Attack
+	float maxScareDistance = 20;
+	int attackCount = 0;
+	int maxAttackTimes = 5;
+	float scareLevels = 0.0;
+	int scared_times = 0;
+	float attackDamageDistance = 25;
+	
+
+	//Retreat
+	float retreatSeparation = 200;
+	bool retreatFirst = true;
+	Vector3 retreatDir;
 	
 	//Idle
 	float idleDisplacement = 0;
@@ -56,10 +68,12 @@ private:
 	bool changeDir = false;
 
 	//Homing Data
-	float homingRadius = 50;
+	float homingRadius = 60;
 	float homingAngle = 0;
 	float homingSpeed = .1;
 	Vector3 homingTarget;
+	bool from_attack = false;
+	float homingSnapDistance = 3;
 	
 
 	void generateNewPosition();
@@ -95,5 +109,6 @@ public:
 		canAttack = state;
 	}
 	
+	void scareShark(Vector3 pos);
 };
 
