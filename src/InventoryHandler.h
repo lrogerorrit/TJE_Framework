@@ -12,12 +12,15 @@ class InventoryHandler
 		coal
 	};
 	
+	const int slotPixelSize = 32;
 	struct slotData {
 		ePickupType type;
 		int pos;
 		int quantity;
+		void renderSlot(int posX, int posY, int size);
+		Texture* tex;
 	};
-	int const maxQuantityPerSlot = 4;
+	const int maxQuantityPerSlot = 12;
 	std::vector<slotData> inventory;
 
 	int getTotalQuantity(ePickupType type);
@@ -29,6 +32,8 @@ class InventoryHandler
 	void removeAllFromInventory();
 	bool isFull();
 	bool isEmpty();
+	
+	void render();
 	
 	InventoryHandler();
 	

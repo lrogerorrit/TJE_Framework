@@ -105,4 +105,49 @@ bool InventoryHandler::isEmpty()
 	return true;
 }
 
+void InventoryHandler::render()
+{
+	for (int i = 0; i < inventory.size(); ++i) {
+		if (inventory[i].quantity > 0) {
+			inventory[i].renderSlot(i%5,floor(i/5), slotPixelSize);
+		}
+	}
+}
 
+Vector2 slotToWorldCoord(int x, int y) {
+	int xOffset = Game::instance->window_width / 9;
+	int yOffset = Game::instance->window_height / 6;
+	return Vector2(x * Game::instance->window_width/7 + xOffset, y*Game::instance->window_height/2 + yOffset);
+}
+
+void InventoryHandler::slotData::renderSlot(int posX, int posY, int size)
+{
+	Vector2 pos = slotToWorldCoord(posX, posY);
+	
+	int windowHeight = Game::instance->window_height;
+	int windowWidth = Game::instance->window_width;
+	
+	Mesh quad;
+	quad.createQuad(pos.x, pos.y, size, size, false);
+	
+	Camera cam2D;
+	cam2D.setOrthographic(0, windowWidth, windowHeight, 0, -1, 1);
+	
+	Shader* a_shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	
+	if (!a_shader) return;
+	a_shader->enable();
+	a_shader->setUniform("u_color", Vector4(1,1,1,1));
+	a_shader->setUniform("u_viewprojection", cam2D.viewprojection_matrix);
+	
+	if (this->tex != NULL) {
+		a_shader->setUniform("u_texture", this->tex,0);
+	}
+	a_shader->setUniform("u_time", time);
+	a_shader->setUniform("u_tex_tiling", 1.0f);
+	a_shader->setUniform("u_model", Matrix44());
+	
+	quad.render(GL_TRIANGLES);
+
+	a_shader->disable();
+}
