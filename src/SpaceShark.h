@@ -6,7 +6,8 @@ enum class eSharkState {
 	IDLE,
 	ATTACK,
 	RETREAT,
-	BACKSTAGE
+	BACKSTAGE,
+	HOMING
 };
 
 
@@ -21,6 +22,9 @@ private:
 	TrainHandler* trainHandler=NULL;
 	
 	eSharkState state = eSharkState::IDLE;
+
+
+	
 	
 	float lastAttackTime = 0;
 	float timeInStage = 0.0;
@@ -35,11 +39,28 @@ private:
 	bool rightSide = true;
 	float train_separation = 40.0f;
 
+	
+
+	float rightDisplacement = 0;
+	
+	float maxRightDisplacement = 40;
+	
+	
+	//Idle
 	float idleDisplacement = 0;
 	float idleDisplacementDir = 1;
-	float rightDisplacement = 0;
-	float maxRightDisplacement = 40;
+	float sharkLerpPos = 0;
+	int sharkDisplDirection = 1;
+	float sharkAngleDirection = 1;
 
+	bool changeDir = false;
+
+	//Homing Data
+	float homingRadius = 50;
+	float homingAngle = 0;
+	float homingSpeed = .1;
+	Vector3 homingTarget;
+	
 
 	void generateNewPosition();
 	void navigateToTrain(double deltaTime);
@@ -48,12 +69,19 @@ private:
 	void updateRetreat(double deltaTime);
 	void updateBackstage(double deltaTime);
 
+	void updateHomingTarget(double deltaTime);
+	
+	void homingGoToRadius(double deltaTime);
+	void homingRotate(double deltaTime);
+	void updateHoming(double deltaTime);
+
 	Vector2 position;
 	float height = 0.0f; //Relative to train
 
 	MeshEntity* meshEntity = NULL;
 	
 	
+	double updateDisplAngle(double deltaTime, float speed);
 
 public:
 	static SpaceShark* instance;
