@@ -24,7 +24,7 @@ class InventoryHandler
 	std::vector<slotData> inventory;
 
 	int getTotalQuantity(ePickupType type);
-	int addToInventory(ePickupType type, int quantity);
+	int addToInventory(ePickupType type, int quantity);  //returns int to know how many did we succesfully added
 	int removeFromInventory(ePickupType type, int quantity); //returns int to know how many did we succesfully remove
 	bool addToInventory(ePickupType type);
 	void removeFromInventory(ePickupType type);
