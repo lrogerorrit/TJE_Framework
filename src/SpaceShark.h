@@ -43,6 +43,8 @@ private:
 	float rightDisplacement = 0;
 	
 	float maxRightDisplacement = 40;
+
+	bool checkCollisions = true;
 	
 	//Attack
 	float maxScareDistance = 20;
@@ -79,6 +81,7 @@ private:
 	void generateNewPosition();
 	void navigateToTrain(double deltaTime);
 	void updateIdle(double deltaTime);
+	bool detectObstacles();
 	void updateAttack(double deltaTime);
 	void updateRetreat(double deltaTime);
 	void updateBackstage(double deltaTime);

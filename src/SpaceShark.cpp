@@ -146,6 +146,13 @@ void SpaceShark::updateIdle(double deltaTime)
 	}
 }
 
+bool SpaceShark::detectObstacles() {
+	if (this->inBackstage || !this->checkCollisions) return;
+	this->meshEntity->mesh->ray
+	
+
+}
+
 void SpaceShark::scareShark(Vector3 pos) {
 	Vector3 sharkPos = this->meshEntity->getPosition();
 	float dist = sharkPos.distance(pos);

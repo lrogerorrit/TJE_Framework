@@ -35,6 +35,9 @@ public:
 	bool hasCollisionMesh = false;
 	Mesh* collisionMesh = NULL;
 
+	bool collidesWithShark = true;
+	
+
 	
 
 	//void render();
