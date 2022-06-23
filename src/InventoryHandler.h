@@ -1,6 +1,7 @@
 #pragma once
-#include "game.h"
-#include "Player.h"
+#include "texture.h"
+#include "mesh.h"
+#include "shader.h"
 
 class InventoryHandler
 {
@@ -15,11 +16,12 @@ class InventoryHandler
 	const int slotPixelSize = 32;
 	struct slotData {
 		ePickupType type;
-		int pos;
 		int quantity;
 		void renderSlot(int posX, int posY, int size);
 		Texture* tex;
+		slotData(ePickupType type, int quant, const char* path);
 	};
+	
 	const int maxQuantityPerSlot = 12;
 	std::vector<slotData> inventory;
 
@@ -32,10 +34,13 @@ class InventoryHandler
 	void removeAllFromInventory();
 	bool isFull();
 	bool isEmpty();
+
 	
 	void render();
 	
 	InventoryHandler();
+	int nCol = 5;
+	int nRow = 2;
 	
 	
 };

@@ -20,7 +20,7 @@
 #include "stages/DepositionStage.h"
 #include "SpaceShark.h"
 #include <time.h> 
-
+#include "InventoryHandler.h"
 
 
 //some globals
@@ -49,7 +49,7 @@ MeshEntity* playerMesh;
 Player* player= NULL;
 
 
-
+InventoryHandler* inv = NULL;
 
 //end coses uri
 Game* Game::instance = NULL;
@@ -159,7 +159,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	player = new Player();
 
-
+	//inv = new InventoryHandler();
 	
 	//End coses uri																				//////////
 

@@ -1,4 +1,5 @@
 #include "InventoryHandler.h"
+#include "game.h"
 
 int InventoryHandler::getTotalQuantity(ePickupType type)
 {
@@ -109,7 +110,7 @@ void InventoryHandler::render()
 {
 	for (int i = 0; i < inventory.size(); ++i) {
 		if (inventory[i].quantity > 0) {
-			inventory[i].renderSlot(i%5,floor(i/5), slotPixelSize);
+			inventory[i].renderSlot(i%nCol,floor(i/nCol), slotPixelSize);
 		}
 	}
 }
@@ -150,4 +151,18 @@ void InventoryHandler::slotData::renderSlot(int posX, int posY, int size)
 	quad.render(GL_TRIANGLES);
 
 	a_shader->disable();
+}
+
+InventoryHandler::slotData::slotData(ePickupType type, int quant, const char* path)
+{
+	this->type = type;
+	this->quantity = quant;
+	Texture* tex = Texture::Get(path);
+	this->tex = tex;
+}
+
+InventoryHandler::InventoryHandler() {
+	for (int i = 0; i < nCol * nRow; ++i){
+		inventory.push_back(slotData(ePickupType::empty, 0, "data/assets/cube.png"));
+	}
 }
