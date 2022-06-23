@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "shader.h"
 #include "extra/easing.h"
+#include "extra/coldet/coldet.h"
 
 Vector2 idleTimes(1, 3);//(10, 30);
 Vector2 attackTimes(20, 30);//(20, 60);
@@ -86,7 +87,7 @@ void SpaceShark::updateIdle(double deltaTime)
 		idleDisplacementDir *= -1;
 		changeDir = true;
 	}
-	std::cout<<"idleDisplacement: "<<((idleDisplacement / 2.0) + .5) << "\n";
+	//std::cout<<"idleDisplacement: "<<((idleDisplacement / 2.0) + .5) << "\n";
 	
 	auto easingFunction = getEasingFunction(EaseInOutSine);
 	double displEasing = ((easingFunction((idleDisplacement / 2.0) + .5)-.5)*2.0);
@@ -147,9 +148,22 @@ void SpaceShark::updateIdle(double deltaTime)
 }
 
 bool SpaceShark::detectObstacles() {
-	if (this->inBackstage || !this->checkCollisions) return;
-	this->meshEntity->mesh->ray
+	if (this->inBackstage || !this->checkCollisions) return false;
+	CollisionModel3D* collision_model = (CollisionModel3D*)this->meshEntity->mesh->collision_model;
+	return (collision_model->rayCollision(this->meshEntity->model.getTranslation().v, this->meshEntity->model.frontVector().v,true,0.0f,50.0f));
 	
+
+}
+
+void SpaceShark::updateForObstacles(double deltaTime) {
+	bool detectedObject = this->detectObstacles();
+	if (detectedObject) {
+		
+		this->height = clamp(this->height - 1.2 * deltaTime, -3, 0);
+	}
+	else
+		this->height = clamp(this->height + 1.2 * deltaTime, -3, 0);
+
 
 }
 
@@ -216,7 +230,7 @@ void SpaceShark::updateRetreat(double deltaTime)
 	Vector2 trainPos2D(trainPos.x, trainPos.z);
 	
 	this->train_separation= (Vector2(pos.x,pos.z)-trainPos2D).length();
-	std::cout << "Train Separation: " << this->train_separation << "                 \r";
+	//std::cout << "Train Separation: " << this->train_separation << "                 \r";
 	
 	
 	if (this->train_separation > retreatSeparation) {
@@ -359,6 +373,8 @@ void SpaceShark::Update(double deltaTime)
 			updateHoming(deltaTime);
 			break;
 	}
+	this->updateForObstacles(deltaTime);
+	this->meshEntity->model.translate(0, height, 0);
 }
 
 void SpaceShark::Render()

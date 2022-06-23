@@ -82,6 +82,7 @@ private:
 	void navigateToTrain(double deltaTime);
 	void updateIdle(double deltaTime);
 	bool detectObstacles();
+	void updateForObstacles(double deltaTime);
 	void updateAttack(double deltaTime);
 	void updateRetreat(double deltaTime);
 	void updateBackstage(double deltaTime);
@@ -94,6 +95,8 @@ private:
 
 	Vector2 position;
 	float height = 0.0f; //Relative to train
+
+	
 
 	MeshEntity* meshEntity = NULL;
 	
