@@ -50,6 +50,7 @@ Player* player= NULL;
 
 
 InventoryHandler* inv = NULL;
+bool invOpen = false;
 
 //end coses uri
 Game* Game::instance = NULL;
@@ -159,7 +160,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	player = new Player();
 
-	//inv = new InventoryHandler();
+	inv = new InventoryHandler();
 	
 	//End coses uri																				//////////
 
@@ -237,9 +238,13 @@ void Game::render(void)
 	this->activeStage->render();
 	player->renderPlayer();
 	
-
+	
 	//Draw the floor grid
 	drawGrid();
+
+
+	//Draw inventory GUI
+	if (invOpen) inv->render();
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -305,6 +310,8 @@ void Game::update(double seconds_elapsed)
 		cameraLocked = !cameraLocked;
 		Input::centerMouse();
 	};
+
+	if (Input::wasKeyPressed(SDL_SCANCODE_I)) invOpen = !invOpen;
 
 	// end Coses URI
 	

@@ -109,9 +109,8 @@ bool InventoryHandler::isEmpty()
 void InventoryHandler::render()
 {
 	for (int i = 0; i < inventory.size(); ++i) {
-		if (inventory[i].quantity > 0) {
-			inventory[i].renderSlot(i%nCol,floor(i/nCol), slotPixelSize);
-		}
+		inventory[i].renderSlot(i%nCol,floor(i/nCol), slotPixelSize);
+		
 	}
 }
 
@@ -121,7 +120,7 @@ Vector2 slotToWorldCoord(int x, int y) {
 	return Vector2(x * Game::instance->window_width/7 + xOffset, y*Game::instance->window_height/2 + yOffset);
 }
 
-void InventoryHandler::slotData::renderSlot(int posX, int posY, int size)
+void slotData::renderSlot(int posX, int posY, int size)
 {
 	Vector2 pos = slotToWorldCoord(posX, posY);
 	
@@ -153,7 +152,7 @@ void InventoryHandler::slotData::renderSlot(int posX, int posY, int size)
 	a_shader->disable();
 }
 
-InventoryHandler::slotData::slotData(ePickupType type, int quant, const char* path)
+slotData::slotData(ePickupType type, int quant, const char* path)
 {
 	this->type = type;
 	this->quantity = quant;

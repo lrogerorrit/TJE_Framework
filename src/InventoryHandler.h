@@ -3,24 +3,26 @@
 #include "mesh.h"
 #include "shader.h"
 
+enum ePickupType {
+	empty,
+	wood,
+	iron,
+	stone,
+	coal
+};
+
+const int slotPixelSize = 64;
+struct slotData {
+	ePickupType type;
+	int quantity;
+	void renderSlot(int posX, int posY, int size);
+	Texture* tex;
+	slotData(ePickupType type, int quant, const char* path);
+};
+
 class InventoryHandler
 {
-	enum ePickupType {
-		empty,
-		wood,
-		iron,
-		stone,
-		coal
-	};
-	
-	const int slotPixelSize = 32;
-	struct slotData {
-		ePickupType type;
-		int quantity;
-		void renderSlot(int posX, int posY, int size);
-		Texture* tex;
-		slotData(ePickupType type, int quant, const char* path);
-	};
+public:
 	
 	const int maxQuantityPerSlot = 12;
 	std::vector<slotData> inventory;
@@ -35,7 +37,6 @@ class InventoryHandler
 	bool isFull();
 	bool isEmpty();
 
-	
 	void render();
 	
 	InventoryHandler();
