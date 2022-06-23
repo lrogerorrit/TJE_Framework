@@ -17,7 +17,7 @@ public:
 	Mesh* mesh;
 	Texture* texture;
 	Shader* shader;
-	
+	bool collidesWithShark = true;
 	bool hasLowPolyVersion = false;
 	float minDistanceForLowPoly = 200;
 	Mesh* lowPolyMesh;
