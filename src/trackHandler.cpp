@@ -94,7 +94,7 @@ void TrackHandler::calculateTrack()
 	calculated = true;
 	//std::cout << bc->numSegments << std::endl;
 	for (int i = 0; i < bc->numSegments;++i) {
-		Vector3& data = bc->cachedSegments[i];
+		Vector3& data = bc->getSegment(i);
 		trackSectionData sectionData;
 		sectionData.startPoint = data;
 		sectionData.frontVector= bc->getSegmentDirection(i);
@@ -173,12 +173,12 @@ void TrackHandler::calculateTrack()
 	float half_separation = trackSeparation / 2.0;
 	
 	Vector3 half_height_vector(0, tie_height / 2.0, 0);
-	for (double i = 0; i < 1.0; i += .08) {
+	for (double i = 0; i < bc->numSegments; i += 3) {
 		trackTieData data;
 		data.trackLocation = i;
-		Vector3 pos = bc->getPosition(i);
+		Vector3 pos = bc->getSegment(i);
 		data.center = pos;
-		int section= bc->getSegmentFromMu(i);
+		int section = i;
 		if (section == bc->numSegments - 1) continue;
 		Vector3 dir = bc->getSegmentDirection(section);
 		Vector3 right = dir.cross(Vector3(0, 1, 0));
@@ -334,6 +334,8 @@ void TrackHandler::renderTrack(int maxDistance)
 		data.tieMesh->render(GL_TRIANGLES);
 	}
 	trackShader->disable();
+
+	
 }
 
 trackQuad::trackQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)
