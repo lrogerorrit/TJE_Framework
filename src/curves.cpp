@@ -7,9 +7,60 @@ BeizerCurve::BeizerCurve(std::vector<Vector3>& points, float increments, bool ca
 {
 	this->curvePoints = points;
 	this->numPoints = points.size()-1;
+	this->calculateArcLength(1000);
 	//calculate cached segments
 	if (cacheAtStart)
-		this->cacheSegments(increments);
+		this->calculateUniformSegments(150);
+		//this->cacheSegments(increments);
+}
+
+void BeizerCurve::calculateArcLength(int points) {
+	float length = 0.0f;
+	float increments = 1.0 / points;
+	Vector3 prevPoint = this->getPosition(0);
+	for (float i = increments; i <= 1.0; i += increments) {
+		Vector3 actualPoint = this->getPosition(i);
+		length += prevPoint.distance(actualPoint);
+		prevPoint = actualPoint;
+	}
+	std::cout << "Arc length= " << length << std::endl;
+	this->arcLength = length;
+}
+
+void BeizerCurve::calculateUniformSegments(int segmentNum,float marginError) {
+	float segmentSize = this->arcLength / (float) segmentNum;
+	double acumulatedDistance = 0;
+	double segmentDistance = 0;
+	
+	this->numSegments = segmentNum;
+	
+	double increments = .00001;
+	double mu = 0;
+	for (int i = 0; i < segmentNum; ++i) {
+		segmentData data;
+		double segmentPos = segmentSize * i;
+		std::cout << "Segment "<<i<<" pos " << segmentPos<< std::endl;
+		Vector3 pos = this->getPosition(mu);
+		while (abs(acumulatedDistance - segmentPos) > marginError) {
+			mu += increments;
+			
+			Vector3 newPos = this->getPosition(mu);
+			float change= pos.distance(newPos);
+			acumulatedDistance += change;
+			//std::cout << mu <<"-" <<acumulatedDistance<< std::endl;
+			segmentDistance += change;
+			pos = newPos;
+		}
+		data.mu = mu;
+		data.position = pos;
+		std::cout << "Segment " << i << " at dist: " << acumulatedDistance << std::endl;
+		if (i > 0) 
+			this->segmentArray[i - 1].distance = segmentDistance;
+
+		//this->cachedSegments.push_back(pos);
+		this->segmentArray.push_back(data);
+		segmentDistance = 0;
+	}
 }
 
 void BeizerCurve::addPoint(Vector3 pos, int index)
@@ -21,7 +72,7 @@ void BeizerCurve::addPoint(Vector3 pos, int index)
 	this->numPoints++;
 }
 
-Vector3 BeizerCurve::getPosition(float mu) //Extracted from http://paulbourke.net/geometry/bezier/
+Vector3 BeizerCurve::getPosition(double mu) //Extracted from http://paulbourke.net/geometry/bezier/
 {
 	assert(mu >= 0 && mu < 1);
 	int k, kn, nn, nkn;
@@ -97,8 +148,25 @@ void BeizerCurve::cacheSegments(float increments)
 	
 }
 
-float BeizerCurve::getSegmentDistance(int i)
+Vector3 BeizerCurve::getSegmentDirection(int i)
 {
-	return segmentDistances[i];
+	segmentData& data = this->segmentArray[i];
+	return (data.position - (this->getPosition(data.mu + .0001))).normalize();
+	
+}
+
+int BeizerCurve::getSegmentFromMu(float mu)
+{
+	if (mu == 0) return 0;
+	else if (mu == 1) return this->numSegments;
+	for(int i=0;i<this->numSegments-1;++i){
+		auto &data = this->segmentArray[i];
+		auto& nextData = this->segmentArray[i + 1];
+
+		if (mu >= data.mu && mu < nextData.mu) return i;
+
+		
+		
+	}
 }
 
