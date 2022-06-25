@@ -78,6 +78,8 @@ int InventoryHandler::removeFromInventory(ePickupType type, int quantity) {
 			if (inventory[i].quantity - quantity < 0) {
 				quantity -= inventory[i].quantity;
 				inventory[i].quantity = 0;
+				inventory[i].tex = Texture::Get("data/assets/cube.png");
+				inventory[i].type = ePickupType::empty;
 
 			}
 			else {
@@ -104,6 +106,8 @@ void InventoryHandler::removeAllFromInventory(ePickupType type)
 	for (int i = 0; i < inventory.size(); ++i) {
 		if (inventory[i].type = type) {
 			inventory[i].quantity = 0;
+			inventory[i].tex = Texture::Get("data/assets/cube.png");
+			inventory[i].type = ePickupType::empty;
 		}
 	}
 }
@@ -112,6 +116,8 @@ void InventoryHandler::removeAllFromInventory()
 {
 	for (int i = 0; i < inventory.size(); ++i) {
 		inventory[i].quantity = 0;
+		inventory[i].tex = Texture::Get("data/assets/cube.png");
+		inventory[i].type = ePickupType::empty;
 	}
 }
 
