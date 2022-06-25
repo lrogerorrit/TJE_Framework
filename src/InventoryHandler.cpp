@@ -137,9 +137,42 @@ bool InventoryHandler::isEmpty()
 
 void InventoryHandler::render()
 {
+	
+
+	//Render all icons
 	for (int i = 0; i < inventory.size(); ++i) {
 		inventory[i].renderSlot(i%nCol,floor(i/nCol), slotPixelSize);
 	}
+
+	//Render background:
+	Vector2 pos(slotPixelSize * (nCol + 1) / 2, slotPixelSize * (nRow + 1) / 2);
+
+	int windowHeight = Game::instance->window_height;
+	int windowWidth = Game::instance->window_width;
+
+	Mesh quad;
+	quad.createQuad(pos.x, pos.y, slotPixelSize * (nCol + 1), slotPixelSize * (nRow + 1), false);
+
+	Camera cam2D;
+	cam2D.setOrthographic(0, windowWidth, windowHeight, 0, -1, 1);
+
+	Shader* a_shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+
+	if (!a_shader) return;
+	a_shader->enable();
+	a_shader->setUniform("u_color", Vector4(1, 1, 1, 1));
+	a_shader->setUniform("u_viewprojection", cam2D.viewprojection_matrix);
+	Texture* tex = Texture::Get("data/inventory/glassPanel_cornerTR.png");
+	if (tex != NULL) {
+		a_shader->setUniform("u_texture", tex, 0);
+	}
+	a_shader->setUniform("u_time", time);
+	a_shader->setUniform("u_tex_tiling", 1.0f);
+	a_shader->setUniform("u_model", Matrix44());
+
+	quad.render(GL_TRIANGLES);
+
+	a_shader->disable();
 }
 
 Vector2 slotToWorldCoord(int x, int y) {
