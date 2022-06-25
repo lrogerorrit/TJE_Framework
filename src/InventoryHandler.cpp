@@ -16,7 +16,7 @@ int InventoryHandler::addToInventory(ePickupType type, int quantity)
 {
 	int initQuantity = quantity;
 	for (int i = 0; i < inventory.size(); ++i) {
-		if (inventory[i].quantity+quantity>maxQuantityPerSlot) {
+		if (inventory[i].quantity+quantity>maxQuantityPerSlot && inventory[i].quantity<maxQuantityPerSlot) {
 			if (inventory[i].type == type) {
 				quantity = maxQuantityPerSlot - inventory[i].quantity;
 				inventory[i].quantity = maxQuantityPerSlot;
@@ -25,17 +25,46 @@ int InventoryHandler::addToInventory(ePickupType type, int quantity)
 				inventory[i].type = type;
 				inventory[i].quantity = maxQuantityPerSlot;
 				quantity -= maxQuantityPerSlot;
+				switch (type) {
+				case ePickupType::coal:
+					inventory[i].tex = Texture::Get("data/inventory/coal.png");
+					break;
+				case ePickupType::iron:
+					inventory[i].tex = Texture::Get("data/inventory/iron.png");
+					break;
+				case ePickupType::wood:
+					inventory[i].tex = Texture::Get("data/inventory/wood.png");
+					break;
+				case ePickupType::stone:
+					inventory[i].tex = Texture::Get("data/inventory/rock.jpg");
+					break;
+				}
 			}
 		}
-		else {
+		else if(inventory[i].quantity < maxQuantityPerSlot) {
 			if (inventory[i].type == type) {
 				inventory[i].quantity += quantity;
+				return 0;
 			}
 			else if (inventory[i].type == ePickupType::empty) {
 				inventory[i].type = type;
 				inventory[i].quantity += quantity;
+				switch (type) {
+				case ePickupType::coal:
+					inventory[i].tex = Texture::Get("data/inventory/coal.png");
+					break;
+				case ePickupType::iron:
+					inventory[i].tex = Texture::Get("data/inventory/iron.png");
+					break;
+				case ePickupType::wood:
+					inventory[i].tex = Texture::Get("data/inventory/wood.png");
+					break;
+				case ePickupType::stone:
+					inventory[i].tex = Texture::Get("data/inventory/rock.jpg");
+					break;
+				}
+				return 0;
 			}			
-			return 0;
 			
 		}
 	}
@@ -60,7 +89,7 @@ int InventoryHandler::removeFromInventory(ePickupType type, int quantity) {
 	return quantity;
 }
 
-bool InventoryHandler::addToInventory(ePickupType type)
+int InventoryHandler::addToInventory(ePickupType type)
 {
 	return addToInventory(type, 1);
 }
@@ -110,14 +139,11 @@ void InventoryHandler::render()
 {
 	for (int i = 0; i < inventory.size(); ++i) {
 		inventory[i].renderSlot(i%nCol,floor(i/nCol), slotPixelSize);
-		
 	}
 }
 
 Vector2 slotToWorldCoord(int x, int y) {
-	int xOffset = Game::instance->window_width / 9;
-	int yOffset = Game::instance->window_height / 6;
-	return Vector2(x * Game::instance->window_width/7 + xOffset, y*Game::instance->window_height/2 + yOffset);
+	return Vector2(x * slotPixelSize + slotPixelSize, y*slotPixelSize + slotPixelSize);
 }
 
 void slotData::renderSlot(int posX, int posY, int size)

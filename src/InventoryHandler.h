@@ -11,7 +11,9 @@ enum ePickupType {
 	coal
 };
 
-const int slotPixelSize = 64;
+const int slotPixelSize = 128;
+const int nCol = 5;
+const int nRow = 2;
 struct slotData {
 	ePickupType type;
 	int quantity;
@@ -30,18 +32,18 @@ public:
 	int getTotalQuantity(ePickupType type);
 	int addToInventory(ePickupType type, int quantity);  //returns int to know how many did we succesfully added
 	int removeFromInventory(ePickupType type, int quantity); //returns int to know how many did we succesfully remove
-	bool addToInventory(ePickupType type);
+	int addToInventory(ePickupType type);
 	void removeFromInventory(ePickupType type);
 	void removeAllFromInventory(ePickupType type);
 	void removeAllFromInventory();
 	bool isFull();
 	bool isEmpty();
 
+	
+
 	void render();
 	
 	InventoryHandler();
-	int nCol = 5;
-	int nRow = 2;
 	
 	
 };

@@ -161,6 +161,13 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	player = new Player();
 
 	inv = new InventoryHandler();
+
+	inv->addToInventory(ePickupType::coal, 3);
+	inv->addToInventory(ePickupType::wood, 13);
+	inv->addToInventory(ePickupType::iron, 1);
+	inv->addToInventory(ePickupType::stone, 3);
+	inv->addToInventory(ePickupType::wood, 1);
+	inv->addToInventory(ePickupType::iron, 14);
 	
 	//End coses uri																				//////////
 
