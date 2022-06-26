@@ -125,6 +125,8 @@ void TrainHandler::render()
 	for (int i = 0; i < this->trainCarArray.size(); i++)
 	{
 		trainCarData& data= this->trainCarArray[i];
+		Vector3 pos = data.trainMesh->getPosition();
+		std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
 		//data.entity->render();
 		
 		data.trainMesh->render();
