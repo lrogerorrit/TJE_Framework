@@ -95,7 +95,8 @@ void loadTestCar(Game* game) {
 	//trolleyEntity->ingoreCollision = true;
 	trolleyEntity->setCollisionMesh(Mesh::Get("data/assets/train/collisionMesh.obj"));
 	positionEntity->addChild(trolleyEntity);
-	//stage->getScene()->getRoot()->addChild(positionEntity);
+	
+	stage->getScene()->getRoot()->addChild(positionEntity);
 	positionEntity->forceCheckChilds = true;
 	trainHandler->addCar(positionEntity,trolleyEntity);
 	trolleyEntity->maxRenderDist = 10000000000000;
