@@ -149,7 +149,9 @@
     <ClCompile Include="..\..\src\fbo.cpp" />
     <ClCompile Include="..\..\src\framework.cpp" />
     <ClCompile Include="..\..\src\game.cpp" />
+    <ClCompile Include="..\..\src\GUImanager.cpp" />
     <ClCompile Include="..\..\src\input.cpp" />
+    <ClCompile Include="..\..\src\InventoryHandler.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\mesh.cpp" />
     <ClCompile Include="..\..\src\Player.cpp" />
@@ -189,8 +191,10 @@
     <ClInclude Include="..\..\src\fbo.h" />
     <ClInclude Include="..\..\src\framework.h" />
     <ClInclude Include="..\..\src\game.h" />
+    <ClInclude Include="..\..\src\GUImanager.h" />
     <ClInclude Include="..\..\src\includes.h" />
     <ClInclude Include="..\..\src\input.h" />
+    <ClInclude Include="..\..\src\InventoryHandler.h" />
     <ClInclude Include="..\..\src\mesh.h" />
     <ClInclude Include="..\..\src\Player.h" />
     <ClInclude Include="..\..\src\rendertotexture.h" />
