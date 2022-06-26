@@ -218,95 +218,7 @@ void TrackHandler::calculateTrack()
 void TrackHandler::renderTrack(int maxDistance)
 {
 	
-	/*
-	glBegin(GL_QUADS);
 	
-	//go through the vector sectionDataArray
-	//std::cout << sectionDataArray.size() << std::endl;
-	for (int i = 0; i < sectionDataArray.size(); ++i) {
-		trackSectionData& data = sectionDataArray[i];
-		//if (data.length > maxDistance) continue;
-		for (int j = 0; j < data.quads.size(); ++j) {
-			trackQuad& quad = data.quads[j];
-			glColor3f(1,0,0);
-			
-			glVertex3f(quad.v1.x, quad.v1.y, quad.v1.z);
-			glColor3f(0, 1, 0);
-			glVertex3f(quad.v2.x, quad.v2.y, quad.v2.z);
-			glColor3f(0, 0, 1);
-			glVertex3f(quad.v3.x, quad.v3.y, quad.v3.z);
-			glColor3f(1, 1, 0);
-			glVertex3f(quad.v4.x, quad.v4.y, quad.v4.z);
-			
-			//print quad.v1 to console
-			/*std::cout << quad.v1.x << " " << quad.v1.y << " " << quad.v1.z << std::endl;
-			std::cout << quad.v2.x << " " << quad.v2.y << " " << quad.v2.z << std::endl;
-			std::cout << quad.v3.x << " " << quad.v3.y << " " << quad.v3.z << std::endl;
-			std::cout << quad.v4.x << " " << quad.v4.y << " " << quad.v4.z << std::endl;*-/
-			
-		}
-	}
-
-	for (int i = 0; i < tieDataArray.size(); ++i) {
-		trackTieData& data= tieDataArray[i];
-		for (int j = 0; j < data.quads.size(); ++j) {
-			trackQuad& quad = data.quads[j];
-			glColor3f(1, 0, 0);
-
-			glVertex3f(quad.v1.x, quad.v1.y, quad.v1.z);
-			glColor3f(0, 1, 0);
-			glVertex3f(quad.v2.x, quad.v2.y, quad.v2.z);
-			glColor3f(0, 0, 1);
-			glVertex3f(quad.v3.x, quad.v3.y, quad.v3.z);
-			glColor3f(1, 1, 0);
-			glVertex3f(quad.v4.x, quad.v4.y, quad.v4.z);
-		}
-	}
-	
-	
-
-
-	glEnd();
-
-	glPointSize(5);
-	glBegin(GL_POINTS);
-	BeizerCurve* bc = this->activeCurve;
-	/*if (bc->numSegments > 0)
-		for (int i = 0; i < bc->cachedSegments.size(); ++i) {
-			Vector3& data = bc->cachedSegments[i];
-			Vector3 dir = bc->getSegmentDirection(i);
-			Vector3 right = dir.cross(Vector3(0, 1, 0));
-
-			Vector3 sideA = data + right * trackSeparation*.5;
-			Vector3 sideB = data - right * trackSeparation*.5;
-			//print data
-			//std::cout << "x: " << data.x << " y: " << data.y << " z: " << data.z << std::endl;
-			glColor3f(1, 1, 1);
-			glVertex3f(data.x, data.y, data.z);
-			glColor3f(1, 1, 0);
-			glVertex3f(sideA.x, sideA.y, sideA.z);
-			glColor3f(1, 0, 1);
-			glVertex3f(sideB.x, sideB.y, sideB.z);
-
-		}*-/
-	glColor3f(1, 0, 0);
-	glPointSize(10);
-	if (bc->numPoints > 0)
-		for (int i = 0; i < bc->curvePoints.size(); ++i) {
-			Vector3& data = bc->curvePoints[i];
-			glVertex3f(data.x, data.y, data.z);
-		}
-	/*if (playTrack)
-	{
-		glColor3f(0, 1, 0);
-		glPointSize(15);
-		Vector3& data = bc->getPosition(trackPos);
-		glVertex3f(data.x, data.y, data.z);
-	}*-/
-	glEnd();
-	glPointSize(1);
-	glColor3f(1, 1, 1);
-	*/
 	Camera* cam = Camera::current;
 	Vector3 camPos = cam->eye;
 	
@@ -336,6 +248,12 @@ void TrackHandler::renderTrack(int maxDistance)
 	trackShader->disable();
 
 	
+}
+
+BeizerCurve* TrackHandler::getActiveCurve()
+{
+	
+	return activeCurve;
 }
 
 trackQuad::trackQuad(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4)

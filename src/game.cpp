@@ -63,7 +63,7 @@ Scene* returnTestScene() {
 	
 	MeshEntity* testMeshEntity = new MeshEntity(mesh,low_poly_mesh, texture, shader);
 	testMeshEntity->modifyScale(.5);
-	baseEntity->addChild(testMeshEntity);
+	//baseEntity->addChild(testMeshEntity);
 	testMeshEntity->model.translateGlobal(10, 30, 10);
 	
 	
@@ -76,7 +76,7 @@ Scene* returnTestScene() {
 
 ProceduralWorldStage* testStage() {
 	ProceduralWorldStage* stage = new ProceduralWorldStage(returnTestScene(),trainHandler);
-
+	
 	return stage;
 }
 
@@ -163,15 +163,15 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//End coses uri																				//////////
 
-	this->setActiveStage(loadTestDepo());
+	this->setActiveStage(testStage());
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
 	
 	//this->setActiveScene(returnTestScene());
 	
-	//ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	//st->initSpaceShark();
+	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
+	st->initSpaceShark();
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse

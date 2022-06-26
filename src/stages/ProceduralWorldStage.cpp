@@ -25,13 +25,16 @@ void ProceduralWorldStage::generateProceduralScenery()
 	for (int ii=0; ii<4;++ii){
 		eSceneryType scType = (eSceneryType)ii;
 		std::vector<Vector3> positions;
-		for (double i = 0.0; i <= 1; i += .05) {
+		float len = trackCurve->arcLength;
+		
+		for (int i = 0; i <= trackCurve->segmentArray.size(); i+=3) {
+			segmentData& data= trackCurve->segmentArray[i];
 			Matrix44 mat = Matrix44::IDENTITY;
-			Vector3 pos = trackCurve->getPosition(i);
+			Vector3 pos = data.position;
 			std::cout << "pos 1: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 			mat.setTranslation(pos.x, pos.y, pos.z);
 
-			int segmentNum = trackCurve->getSegmentFromMu(i);
+			int segmentNum = trackCurve->getSegmentFromMu(data.mu);
 			Vector3 dir = trackCurve->getSegmentDirection(segmentNum);
 
 			Vector3 right = dir.cross(Vector3(0, 1, 0));
