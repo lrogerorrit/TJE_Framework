@@ -81,7 +81,7 @@ public:
 	void renderTrack(int maxDistance = 200);
 	
 	double getTrackPosition(){ return trackPosition; }
-	BeizerCurve* getActiveCurve(){ return activeCurve; }
+	BeizerCurve* getActiveCurve();
 	Matrix44 getRenderMatrix(){ return posRotMatrix; }
 	
 	

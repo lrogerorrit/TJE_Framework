@@ -1,5 +1,7 @@
 #include "TrainHandler.h"
 #include "mesh.h"
+#include "stages/StagesInclude.h"
+#include "Scene.h"
 
 
 TrainHandler* TrainHandler::instance = NULL;
@@ -90,8 +92,10 @@ void TrainHandler::update(double dt)
 		trainCarData& data= this->trainCarArray[i];
 		
 		Vector3 oldPos= data.entity->getPosition();
+		
 		if (data.curvePos >= 1.0) data.curvePos = 0;
 		data.curvePos += dt*this->speed * (1 / activeCurve->getSegmentDistance(data.segment));
+		
 		data.segment = activeCurve->getSegmentFromMu(data.curvePos);
 		data.entity->setPosition(activeCurve->getPosition(data.curvePos));
 		Matrix44 rotMatrix= activeCurve->getRotationMatrix(data.curvePos);
@@ -118,14 +122,9 @@ void TrainHandler::update(double dt)
 	
 }
 
-void TrainHandler::render()
-{
-	for (int i = 0; i < this->trainCarArray.size(); i++)
-	{
-		trainCarData& data= this->trainCarArray[i];
-		//data.trainMesh->render();
-	}
-}
+
+
+
 
 trainCarData TrainHandler::getCarData(int carNum)
 {

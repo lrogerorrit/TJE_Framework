@@ -48,7 +48,7 @@ void DepositionStage::update(double seconds_elapsed) {
 void DepositionStage::render() {
 	
 	trackHandler->renderTrack();
-	trainHandler->render();
+	//trainHandler->render();
 	Stage::render();
 }
 

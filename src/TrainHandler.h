@@ -3,6 +3,7 @@
 #include "curves.h"
 
 class BoundingBox;
+class Scene;
 
 
 struct trainCarData {
@@ -52,7 +53,7 @@ public:
 	double getSpeed();
 	
 	void update(double dt);
-	void render();
+	
 
 	trainCarData getCarData(int carNum);
 

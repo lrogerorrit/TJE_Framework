@@ -38,8 +38,6 @@ Mesh* MeshEntity::getMeshToRender()
 void MeshEntity::render()
 {
 	
-	
-
 	Camera* camera = Camera::current;
 	Matrix44 model = this->getGlobalMatrix();
 	
