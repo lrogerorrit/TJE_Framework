@@ -1,6 +1,8 @@
 #include "InventoryHandler.h"
 #include "game.h"
 
+InventoryHandler* InventoryHandler::instance = NULL;
+
 int InventoryHandler::getTotalQuantity(ePickupType type)
 {
 	int out = 0;
@@ -10,6 +12,19 @@ int InventoryHandler::getTotalQuantity(ePickupType type)
 		}
 	}
 	return out;
+}
+
+bool InventoryHandler::canAddItem(ePickupType type)
+{
+	if (this->isFull()) return false;
+
+	for (int i = 0; i < inventory.size(); ++i) {
+		auto data = inventory[i];
+		if(data.type==type && data.quantity< maxQuantityPerSlot)
+			return true;
+	}
+	return false;
+	
 }
 
 int InventoryHandler::addToInventory(ePickupType type, int quantity)
@@ -226,6 +241,7 @@ slotData::slotData(ePickupType type, int quant, const char* path)
 }
 
 InventoryHandler::InventoryHandler() {
+	instance = this;
 	for (int i = 0; i < nCol * nRow; ++i){
 		inventory.push_back(slotData(ePickupType::empty, 0, "data/assets/cube.png"));
 	}

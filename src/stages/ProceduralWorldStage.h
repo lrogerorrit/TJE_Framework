@@ -8,6 +8,7 @@ class TrainHandler;
 class Scene;
 class GroupEntity;
 class CubeMap;
+class InventoryHandler;
 
 class SpaceShark;
 class Player;
@@ -42,6 +43,7 @@ class ProceduralWorldStage :
 		TrainHandler* trainHandler=NULL;
 		SpaceShark* spaceShark=NULL;
 		Player* player;
+		InventoryHandler* inventoryHandler;
 		
 		std::vector<sceneryData> scenery;
 		CubeMap* cubeMap = NULL;

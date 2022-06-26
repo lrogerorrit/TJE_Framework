@@ -26,10 +26,13 @@ class InventoryHandler
 {
 public:
 	
+	static InventoryHandler* instance;
+	
 	const int maxQuantityPerSlot = 12;
 	std::vector<slotData> inventory;
 
 	int getTotalQuantity(ePickupType type);
+	bool canAddItem(ePickupType type);
 	int addToInventory(ePickupType type, int quantity);  //returns int to know how many did we succesfully added
 	int removeFromInventory(ePickupType type, int quantity); //returns int to know how many did we succesfully remove
 	int addToInventory(ePickupType type);

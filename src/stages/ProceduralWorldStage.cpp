@@ -7,6 +7,7 @@
 #include "../CubeMap.h"
 #include "../SpaceShark.h"
 #include "../Player.h"
+#include "../InventoryHandler.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
@@ -107,6 +108,7 @@ ProceduralWorldStage::~ProceduralWorldStage()
 
 void ProceduralWorldStage::initStage()
 {
+	this->inventoryHandler = InventoryHandler::instance;
 	stageType = eStageType::PROCEDURAL_WORLD;
 	this->cubeMap = CubeMap::instance;
 	this->loadAssets();
@@ -147,19 +149,35 @@ Vector4 ProceduralWorldStage::getNearResource() { //(x,y,z,type)
 	return Vector4(0,0,0,-1);
 }
 
+ePickupType getPickupTypeFromItem(int type) {
+	switch (type) {
+	case 4:
+		return ePickupType::wood;
+		
+	default:
+		return ePickupType::empty;
+	}
+}
+
 void ProceduralWorldStage::getResource(Vector4 data)
 {
 	//TODO: if inventory has space;
+	ePickupType pickupType= getPickupTypeFromItem(data.w);
+	if (!inventoryHandler->canAddItem(pickupType)) return; //TODO: Notify inv full;
 	auto& scenerydata = this->scenery[data.w];
 	for (int i = 0; i < scenerydata.positions.size(); ++i) {
 		Vector3 pos= scenerydata.positions[i];
 		if(pos.x==data.x && pos.y==data.y && pos.z==data.z) {
 			scenerydata.positions.erase(scenerydata.positions.begin() + i);
-			//TODO: Add to inventory;
+			scenerydata.scenery->removeObject(i);
+			inventoryHandler->addToInventory(pickupType);
+			//TODO: Play pickup sound
 			return;
 		}
 	}
 }
+
+
 
 void ProceduralWorldStage::update(double deltaTime)
 {
