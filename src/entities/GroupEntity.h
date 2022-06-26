@@ -36,6 +36,7 @@ public:
 	bool getShouldRenderEntity();
 
 	void addObject(Matrix44 objMatrix);
+	void removeObject(int i);
 	
 	std::vector<Matrix44>& getMatrixList() { return matrixList; };
 

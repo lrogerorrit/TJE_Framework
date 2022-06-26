@@ -65,6 +65,8 @@ class ProceduralWorldStage :
 
 		Vector4 getNearResource();
 
+		void getResource(Vector4 data);
+
 		void update(double deltaTime) ;
 		void render();
 };
