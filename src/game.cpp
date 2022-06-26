@@ -105,7 +105,7 @@ void loadTestCar(Game* game) {
 
 DepositionStage* loadTestDepo() {
 	SceneParser* parser = SceneParser::instance;
-	Scene* sc= parser->parseFile("data/export.scene");
+	Scene* sc= parser->parseFile("data/depo1.scene");
 	DepositionStage* stage = new DepositionStage(sc);
 	return stage;
 }
