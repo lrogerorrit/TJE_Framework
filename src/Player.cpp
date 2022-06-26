@@ -20,6 +20,8 @@ const float rope_speed = 10;
 
 float y_pos = 0;
 
+Player* Player::instance = NULL;
+
 Player::Player()
 {
 	Mesh* mesh = Mesh::Get("data/playerTemp.obj");
@@ -31,6 +33,7 @@ Player::Player()
 	this->trainHandler = TrainHandler::instance;
 	this->position = Vector3(0, 50, 0);
 	this->playerMesh->setPosition(Vector3(0, 50, 0));
+	instance = this;
 	
 }
 

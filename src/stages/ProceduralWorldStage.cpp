@@ -6,6 +6,7 @@
 #include "../trainHandler.h"
 #include "../CubeMap.h"
 #include "../SpaceShark.h"
+#include "../Player.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
@@ -18,11 +19,12 @@ void ProceduralWorldStage::generateProceduralScenery()
 {
 	float scales[4] = { .5,.5,.5,.5 }; //{ .5,.5, .5,30 };
 	BeizerCurve* trackCurve = this->trackHandler->getActiveCurve();
+	this->player = Player::instance;
 	if (trackCurve == nullptr) return;
 	
 	float maxDistance = 10.0f;
 	
-	for (int ii=0; ii<4;++ii){
+	for (int ii=0; ii<5;++ii){
 		eSceneryType scType = (eSceneryType)ii;
 		std::vector<Vector3> positions;
 		float len = trackCurve->arcLength;
@@ -127,6 +129,24 @@ void ProceduralWorldStage::initSpaceShark() {
 	
 }
 
+bool ProceduralWorldStage::isPlayerNearResource() {
+	
+}
+
+Vector4 ProceduralWorldStage::getNearResource() { //(x,y,z,type)
+	
+	for (int i = 4; i < max_scenery_types; ++i) {
+		auto& data = this->scenery[i];
+		for (int y = 0; y < data.positions.size(); ++y) {
+			Vector3 pos= data.positions[y];
+			if (pos.distance(player->getPosition()) < 10) {
+				return Vector4(pos,i);
+			}
+		}
+	}
+	return Vector4(0,0,0,-1);
+}
+
 void ProceduralWorldStage::update(double deltaTime)
 {
 	this->trackHandler->updatePosition(deltaTime);
@@ -174,6 +194,10 @@ sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type)
 		case eSceneryType::ROCK4:
 			mesh = Mesh::Get("data/assets/rocks/rock4.obj");
 			break;
+		case eSceneryType::PLANK:
+			mesh = Mesh::Get("data/assets/pickables/plank.obj");
+			break;
+				
 					
 	}
 	
@@ -182,6 +206,7 @@ sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type)
 	Texture* texture = Texture::Get("data/assets/rocks/texture.png");
 	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/rockShader.fs");
 	GroupEntity* group = new GroupEntity(mesh, texture, shader, matrices);
+	this->positions = positions;
 	
 	this->scenery = group;
 }
