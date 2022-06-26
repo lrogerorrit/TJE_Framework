@@ -95,6 +95,8 @@
     <ClCompile Include="..\..\src\stages\DepositionStage.cpp">
       <Filter>stages</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\InventoryHandler.cpp" />
+    <ClCompile Include="..\..\src\GUImanager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -196,6 +198,8 @@
     <ClInclude Include="..\..\src\stages\DepositionStage.h">
       <Filter>stages</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\InventoryHandler.h" />
+    <ClInclude Include="..\..\src\GUImanager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extra">
