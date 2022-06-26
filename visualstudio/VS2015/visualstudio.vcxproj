@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\src\shader.cpp" />
     <ClCompile Include="..\..\src\stages\DepositionStage.cpp" />
     <ClCompile Include="..\..\src\SpaceShark.cpp" />
+    <ClCompile Include="..\..\src\stages\ItemPlacementStage.cpp" />
     <ClCompile Include="..\..\src\stages\ProceduralWorldStage.cpp" />
     <ClCompile Include="..\..\src\stages\Stage.cpp" />
     <ClCompile Include="..\..\src\texture.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="..\..\src\shader.h" />
     <ClInclude Include="..\..\src\stages\DepositionStage.h" />
     <ClInclude Include="..\..\src\SpaceShark.h" />
+    <ClInclude Include="..\..\src\stages\ItemPlacementStage.h" />
     <ClInclude Include="..\..\src\stages\ProceduralWorldStage.h" />
     <ClInclude Include="..\..\src\stages\Stage.h" />
     <ClInclude Include="..\..\src\stages\StagesInclude.h" />

@@ -15,4 +15,5 @@ enum class eStageType {
 	BASE,
 	PROCEDURAL_WORLD,
 	DEPO,
+	ITEM_PLACEMENT
 };
