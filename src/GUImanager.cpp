@@ -1,4 +1,15 @@
 #include "GUImanager.h"
+#include "mesh.h"
+#include "game.h"
+#include "texture.h"
+#include "camera.h"
+
+GUImanager* GUImanager::instance = NULL;
+
+GUImanager::GUImanager()
+{
+	instance = this;
+}
 
 void GUImanager::drawQuad(Mesh* quad, Texture* tex)
 {
@@ -31,8 +42,8 @@ void GUImanager::drawQuad(Mesh* quad,Texture* tex, Vector3 position, Vector3 sca
 	int windowWidth = Game::instance->window_width;
 	int windowHeight = Game::instance->window_height;
 
-	Camera cam2D;
-	cam2D.setOrthographic(0, windowWidth, windowHeight, 0, -1, 1);
+	
+	cam2d->setOrthographic(0, windowWidth, windowHeight, 0, -1, 1);
 
 	Shader* a_shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	if (!a_shader) return;
@@ -51,4 +62,9 @@ void GUImanager::drawQuad(Mesh* quad,Texture* tex, Vector3 position, Vector3 sca
 	a_shader->disable();
 
 	
+}
+
+int GUImanager::doFrame(Vector2 position, Vector2 size, Vector4 color)
+{
+	return 0;
 }
