@@ -5,6 +5,7 @@
 
 class Mesh;
 class Camera;
+class Shader;
 
 enum class Gui_State {
 	NONE,
@@ -17,6 +18,7 @@ class GUImanager
 private:
 	Mesh* quad=NULL;
 	Camera* cam2d;
+	Shader* quadShader;
 	
 public:
 	

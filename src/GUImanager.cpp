@@ -3,12 +3,14 @@
 #include "game.h"
 #include "texture.h"
 #include "camera.h"
+#include "shader.h"
 
 GUImanager* GUImanager::instance = NULL;
 
 GUImanager::GUImanager()
 {
 	instance = this;
+	quadShader= Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 }
 
 void GUImanager::drawQuad(Mesh* quad, Texture* tex)
