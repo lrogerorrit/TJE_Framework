@@ -1,5 +1,6 @@
 #include "InventoryHandler.h"
 #include "game.h"
+#include "GUImanager.h"
 
 InventoryHandler* InventoryHandler::instance = NULL;
 
@@ -158,6 +159,17 @@ bool InventoryHandler::isEmpty()
 
 void InventoryHandler::render()
 {
+	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
+	guiManager->doFrame(Vector2(game->window_width/2, game->window_height/2), Vector2(400, 250), Vector4(.1, .1, .1, 1.0));
+	for (int i = 0; i < 8;++i) {
+		int xPos = i % 4;
+		int yPos = floor(i / 4);
+		guiManager->doFrame(Vector2(topLeft.x+(xPos * 75) + 50, topLeft.y+ 50 + yPos * 75), Vector2(70, 70), Vector4(1, 1, 1, 1));
+	}
+}
+
+void InventoryHandler::renderold()
+{
 	
 
 	//Render all icons
@@ -242,6 +254,8 @@ slotData::slotData(ePickupType type, int quant, const char* path)
 
 InventoryHandler::InventoryHandler() {
 	instance = this;
+	guiManager = GUImanager::instance;
+	game = Game::instance;
 	for (int i = 0; i < nCol * nRow; ++i){
 		inventory.push_back(slotData(ePickupType::empty, 0, "data/assets/cube.png"));
 	}

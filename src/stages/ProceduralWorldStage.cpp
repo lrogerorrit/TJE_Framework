@@ -69,7 +69,7 @@ void ProceduralWorldStage::generateProceduralScenery()
 		sceneryData data = sceneryData(positions, scType);
 		this->scenery.push_back(data);
 		data.scenery->groupScale(scales[ii]);
-		this->scene->getRoot()->addChild(data.scenery);
+		//this->scene->getRoot()->addChild(data.scenery);
 	}
 	
 	
@@ -132,7 +132,7 @@ void ProceduralWorldStage::initSpaceShark() {
 }
 
 bool ProceduralWorldStage::isPlayerNearResource() {
-	
+	return true;
 }
 
 Vector4 ProceduralWorldStage::getNearResource() { //(x,y,z,type)

@@ -4,7 +4,8 @@
 #include "shader.h"
 #include "extra/commonItems.h"
 
-
+class GUImanager;
+class Game;
 
 const int slotPixelSize = 128;
 const int nCol = 5;
@@ -19,6 +20,10 @@ struct slotData {
 
 class InventoryHandler
 {
+
+private:
+	GUImanager* guiManager;
+	Game* game;
 public:
 	
 	static InventoryHandler* instance;
@@ -40,6 +45,7 @@ public:
 	
 
 	void render();
+	void renderold();
 	
 	InventoryHandler();
 	

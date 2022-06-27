@@ -22,6 +22,8 @@
 #include <time.h> 
 #include "InventoryHandler.h"
 
+#include"GUImanager.h"
+
 
 //some globals
 Mesh* mesh = NULL;
@@ -141,6 +143,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	new TrackHandler();
 	new CubeMap();
 	new SceneParser();
+	new GUImanager();
+	guiManager = GUImanager::instance;
+	
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
 	texture = new Texture();
  	texture->load("data/texture.tga");
@@ -207,6 +212,7 @@ void Game::render(void)
 	Matrix44 m;
 	m.rotate(angle*DEG2RAD, Vector3(0, 1, 0));
 
+	
 
 
 	/*if (shader)
@@ -254,6 +260,8 @@ void Game::render(void)
 	//Draw inventory GUI
 	if (invOpen) inv->render();
 
+	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
+
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
@@ -264,7 +272,7 @@ void Game::render(void)
 void Game::update(double seconds_elapsed)
 {
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
-
+	guiManager->update();
 	float playerSpeed = 5.0f * seconds_elapsed;
 	float rotSpeed = 10.0f * seconds_elapsed;
 	//example
@@ -279,7 +287,7 @@ void Game::update(double seconds_elapsed)
 		camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
 		camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
 	}
-
+	
 	/*
 	if (playTrack) {
 		//add constant speed taking into count size of segment
@@ -380,6 +388,36 @@ void Game::onResize(int width, int height)
 	camera->aspect =  width / (float)height;
 	window_width = width;
 	window_height = height;
+}
+
+bool Game::isKeyPressed(SDL_Keycode key)
+{
+	return Input::isKeyPressed(key);
+}
+
+bool Game::wasKeyPressed(SDL_Keycode key)
+{
+	return Input::wasKeyPressed(key);
+}
+
+Vector2 Game::getMousePosition()
+{
+	return Input::mouse_position;
+}
+
+bool Game::isLeftMouseDown()
+{
+	return Input::isMousePressed(1);
+}
+
+bool Game::isRightMouseDown()
+{
+	return Input::isMousePressed(3);
+}
+
+bool Game::isMiddleMouseDown()
+{
+	return Input::isMousePressed(2);
 }
 
 void Game::addToDestroyQueue(Entity* ent)

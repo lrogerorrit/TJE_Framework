@@ -12,6 +12,7 @@
 class Entity;
 class Scene;
 class Stage;
+class GUImanager;
 
 class Game
 {
@@ -30,6 +31,7 @@ public:
 	int fps;
 	bool must_exit;
 	bool cameraLocked;
+	GUImanager* guiManager;
 
 	//some vars
 	Camera* camera; //our global camera
@@ -51,9 +53,17 @@ public:
 	void onGamepadButtonUp(SDL_JoyButtonEvent event);
 	void onResize(int width, int height);
 
-	//custom vars
 
 	
+	
+	bool isKeyPressed(SDL_Keycode key);
+	bool wasKeyPressed(SDL_Keycode key);
+	Vector2 getMousePosition();
+	bool isLeftMouseDown();
+	bool isRightMouseDown();
+	bool isMiddleMouseDown();
+	
+	//custom vars	
 	std::vector<Entity*> destroyQueue;
 	std::vector<Scene*> scenes;
 	Scene* activeScene=nullptr; //TODO: remove (or refactor since now in stage)
