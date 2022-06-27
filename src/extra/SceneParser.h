@@ -12,7 +12,8 @@ enum class eParseArguments {
 	TYPE,
 	POSITION,
 	EULER,
-	SCALE
+	SCALE,
+	TEXTURE
 	
 };
 

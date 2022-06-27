@@ -145,7 +145,9 @@ void Player::updatePlayer(double seconds_elapsed)
 	bool isOnTrain = isPlayerOnTrain();
 	bool canJump = false;
 
-	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/) {
+	 
+
+	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/ || isOnDepo) {
 		
 		
 		

@@ -29,6 +29,7 @@ public:
 	float deceleration = .8;//.04f;
 	float pullRopeSpeed = 2.0f;
 	bool dontDecelY = false;
+	bool isOnDepo = true; //change this if not working on update
 	
 	
 
