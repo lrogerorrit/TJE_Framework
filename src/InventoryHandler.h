@@ -2,14 +2,9 @@
 #include "texture.h"
 #include "mesh.h"
 #include "shader.h"
+#include "extra/commonItems.h"
 
-enum ePickupType {
-	empty,
-	wood,
-	iron,
-	stone,
-	coal
-};
+
 
 const int slotPixelSize = 128;
 const int nCol = 5;

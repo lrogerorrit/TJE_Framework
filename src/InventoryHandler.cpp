@@ -20,7 +20,7 @@ bool InventoryHandler::canAddItem(ePickupType type)
 
 	for (int i = 0; i < inventory.size(); ++i) {
 		auto data = inventory[i];
-		if(data.type==type && data.quantity< maxQuantityPerSlot)
+		if(data.type==ePickupType::empty|| (data.type==type && data.quantity< maxQuantityPerSlot))
 			return true;
 	}
 	return false;

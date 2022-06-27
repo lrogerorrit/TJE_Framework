@@ -97,6 +97,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\InventoryHandler.cpp" />
     <ClCompile Include="..\..\src\GUImanager.cpp" />
+    <ClCompile Include="..\..\src\itemChest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -200,6 +201,7 @@
     </ClInclude>
     <ClInclude Include="..\..\src\InventoryHandler.h" />
     <ClInclude Include="..\..\src\GUImanager.h" />
+    <ClInclude Include="..\..\src\itemChest.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extra">
