@@ -8,7 +8,7 @@ class GUImanager;
 class Game;
 
 const int slotPixelSize = 128;
-const int nCol = 5;
+const int nCol = 4;
 const int nRow = 2;
 struct slotData {
 	ePickupType type;

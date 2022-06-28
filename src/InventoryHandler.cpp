@@ -162,9 +162,15 @@ void InventoryHandler::render()
 	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
 	guiManager->doFrame(Vector2(game->window_width/2, game->window_height/2), Vector2(400, 250), Vector4(.1, .1, .1, 1.0));
 	for (int i = 0; i < 8;++i) {
+		auto data = inventory[i];
 		int xPos = i % 4;
 		int yPos = floor(i / 4);
-		guiManager->doFrame(Vector2(topLeft.x+(xPos * 75) + 50, topLeft.y+ 50 + yPos * 75), Vector2(70, 70), Vector4(1, 1, 1, 1));
+		guiManager->doFrame(Vector2(topLeft.x+(xPos * 100) + 50, topLeft.y+ 50 + yPos * 100), Vector2(70, 70), Vector4(1, 1, 1, 1));
+		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1));
+		std::string text = data.quantity >= 10 ? std::to_string(data.quantity) : ("0" + std::to_string(data.quantity));
+		guiManager->doText(Vector2(topLeft.x + (xPos * 100) + 48, topLeft.y + 55 + yPos * 100), text,3, Vector3(1,1,1));
+		
+		
 	}
 }
 

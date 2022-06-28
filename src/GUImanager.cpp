@@ -157,3 +157,9 @@ int GUImanager::doImage(Vector2 position, Vector2 size, Texture* texture, Vector
 	old->enable();
 	return (int)Gui_State::NONE;
 }
+
+int GUImanager::doText(Vector2 position, std::string text,int scale, Vector3 color)
+{
+	drawText(position.x, position.y, text, color, scale);
+	return 0;
+}
