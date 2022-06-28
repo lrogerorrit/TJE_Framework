@@ -37,6 +37,7 @@ public:
 	int removeFromInventory(ePickupType type, int quantity); //returns int to know how many did we succesfully remove
 	int addToInventory(ePickupType type);
 	void removeFromInventory(ePickupType type);
+	void removeFromSlot(int slot);
 	void removeAllFromInventory(ePickupType type);
 	void removeAllFromInventory();
 	bool isFull();

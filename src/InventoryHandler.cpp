@@ -117,6 +117,16 @@ void InventoryHandler::removeFromInventory(ePickupType type)
 	removeFromInventory(type, 1);
 }
 
+void InventoryHandler::removeFromSlot(int slot)
+{
+	auto& data = inventory[slot];
+	if (data.quantity == 1) {
+		inventory[i].quantity = 0;
+		inventory[i].tex = Texture::Get("data/assets/cube.png");
+		inventory[i].type = ePickupType::empty;
+	}
+}
+
 void InventoryHandler::removeAllFromInventory(ePickupType type)
 {
 	for (int i = 0; i < inventory.size(); ++i) {
@@ -165,10 +175,19 @@ void InventoryHandler::render()
 		auto data = inventory[i];
 		int xPos = i % 4;
 		int yPos = floor(i / 4);
-		guiManager->doFrame(Vector2(topLeft.x+(xPos * 100) + 50, topLeft.y+ 50 + yPos * 100), Vector2(70, 70), Vector4(1, 1, 1, 1));
-		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1));
+		if (guiManager->doButton(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(70, 70), Vector4(1, 1, 1, 1))) {
+			if (data.type != ePickupType::empty) {
+				//this->removeSlot(/)
+				data.quantity = 0;
+				data.tex = Texture::Get("data/assets/cube.png");
+				data.type = ePickupType::empty;
+			}
+		}
 		std::string text = data.quantity >= 10 ? std::to_string(data.quantity) : ("0" + std::to_string(data.quantity));
 		guiManager->doText(Vector2(topLeft.x + (xPos * 100) + 48, topLeft.y + 55 + yPos * 100), text,3, Vector3(1,1,1));
+		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1))
+		
+		
 		
 		
 	}

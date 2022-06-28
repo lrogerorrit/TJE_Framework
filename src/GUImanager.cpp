@@ -155,6 +155,18 @@ int GUImanager::doImage(Vector2 position, Vector2 size, Texture* texture, Vector
 	quadShader->disable();
 	glEnable(GL_DEPTH_TEST);
 	old->enable();
+
+	Vector2 mousePos = game->getMousePosition();
+	Vector2 topLeft = Vector2(position.x - (size.x / 2.0), position.y - (size.y / 2.0));
+	
+	if (mousePos.x > topLeft.x && mousePos.x < topLeft.x + size.x && mousePos.y > topLeft.y && mousePos.y < topLeft.y + size.y)
+	{
+		return game->isLeftMouseDown() ? (int)Gui_State::CLICKING : (int)Gui_State::INSIDE;
+	}
+	else
+	{
+		return (int)Gui_State::NONE;
+	}
 	return (int)Gui_State::NONE;
 }
 
