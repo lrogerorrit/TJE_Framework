@@ -20,7 +20,9 @@
 #include "stages/DepositionStage.h"
 #include "SpaceShark.h"
 #include <time.h> 
+#include "InventoryHandler.h"
 
+#include"GUImanager.h"
 
 
 //some globals
@@ -49,7 +51,8 @@ MeshEntity* playerMesh;
 Player* player= NULL;
 
 
-
+InventoryHandler* inv = NULL;
+bool invOpen = false;
 
 //end coses uri
 Game* Game::instance = NULL;
@@ -113,6 +116,16 @@ DepositionStage* loadTestDepo() {
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
 {
+	prevMouseState.reserve(3);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	mouseState.reserve(3);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	
+	
 	this->window_width = window_width;
 	this->window_height = window_height;
 	this->window = window;
@@ -140,6 +153,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	new TrackHandler();
 	new CubeMap();
 	new SceneParser();
+	new GUImanager();
+	guiManager = GUImanager::instance;
+	
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
 	texture = new Texture();
  	texture->load("data/texture.tga");
@@ -160,7 +176,14 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	player = new Player();
 
+	inv = new InventoryHandler();
 
+	inv->addToInventory(ePickupType::coal, 3);
+	inv->addToInventory(ePickupType::wood, 13);
+	inv->addToInventory(ePickupType::iron, 1);
+	inv->addToInventory(ePickupType::stone, 3);
+	inv->addToInventory(ePickupType::wood, 1);
+	inv->addToInventory(ePickupType::iron, 14);
 	
 	//End coses uri																				//////////
 
@@ -199,6 +222,7 @@ void Game::render(void)
 	Matrix44 m;
 	m.rotate(angle*DEG2RAD, Vector3(0, 1, 0));
 
+	
 
 
 	/*if (shader)
@@ -238,9 +262,15 @@ void Game::render(void)
 	this->activeStage->render();
 	player->renderPlayer();
 	
-
+	
 	//Draw the floor grid
 	drawGrid();
+
+
+	//Draw inventory GUI
+	if (invOpen) inv->render();
+
+	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -251,8 +281,8 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	guiManager->update();
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
-
 	float playerSpeed = 5.0f * seconds_elapsed;
 	float rotSpeed = 10.0f * seconds_elapsed;
 	//example
@@ -261,6 +291,9 @@ void Game::update(double seconds_elapsed)
 	//this->activeScene->update(seconds_elapsed);
 	this->activeStage->update(seconds_elapsed);
 	
+	
+	
+	
 	//mouse input to rotate the cam
 	if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) //is left button pressed?
 	{
@@ -268,6 +301,15 @@ void Game::update(double seconds_elapsed)
 		camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
 	}
 
+	for (int i = 0; i < 3; ++i) {
+		prevMouseState[i] = (bool) mouseState[i];
+		
+	}
+	mouseState[0] = Input::mouse_state & SDL_BUTTON_LEFT;
+	mouseState[1] = Input::mouse_state & SDL_BUTTON_MIDDLE;
+	mouseState[2] = Input::mouse_state & SDL_BUTTON_RIGHT;
+		
+	
 	/*
 	if (playTrack) {
 		//add constant speed taking into count size of segment
@@ -306,6 +348,8 @@ void Game::update(double seconds_elapsed)
 		cameraLocked = !cameraLocked;
 		Input::centerMouse();
 	};
+
+	if (Input::wasKeyPressed(SDL_SCANCODE_I)) invOpen = !invOpen;
 
 	// end Coses URI
 	
@@ -366,6 +410,53 @@ void Game::onResize(int width, int height)
 	camera->aspect =  width / (float)height;
 	window_width = width;
 	window_height = height;
+}
+
+bool Game::isKeyPressed(SDL_Keycode key)
+{
+	return Input::isKeyPressed(key);
+}
+
+bool Game::wasKeyPressed(SDL_Keycode key)
+{
+	return Input::wasKeyPressed(key);
+}
+
+Vector2 Game::getMousePosition()
+{
+	return Input::mouse_position;
+}
+
+bool Game::isLeftMouseDown()
+{
+	return Input::isMousePressed(1);
+}
+
+bool Game::isRightMouseDown()
+{
+	return Input::isMousePressed(3);
+}
+
+bool Game::isMiddleMouseDown()
+{
+	return Input::isMousePressed(2);
+}
+
+bool Game::wasLeftMouseDown()
+{
+	bool state= this->mouseState[0]==1 && this->prevMouseState[0]==0;
+	std::cout << this->mouseState[0] << " - " << this->prevMouseState[0] <<": "<<state << std::endl;
+	return state;
+}
+
+bool Game::wasRightMouseDown()
+{
+	return this->mouseState[2] && !this->prevMouseState[2];
+}
+
+bool Game::wasMiddleMouseDown()
+{
+	return this->mouseState[1] && !this->prevMouseState[1];
 }
 
 void Game::addToDestroyQueue(Entity* ent)
