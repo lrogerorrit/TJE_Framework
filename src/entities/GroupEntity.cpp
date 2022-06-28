@@ -86,6 +86,11 @@ void GroupEntity::addObject(Matrix44 objMatrix)
 	matrixList.push_back(objMatrix);
 }
 
+void GroupEntity::removeObject(int i)
+{
+	matrixList.erase(matrixList.begin() + i);
+}
+
 void GroupEntity::setLowPoly(Mesh* mesh)
 {
 	this->hasLowPolyVersion = true;
