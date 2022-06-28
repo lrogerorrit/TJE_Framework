@@ -38,8 +38,6 @@ Mesh* MeshEntity::getMeshToRender()
 void MeshEntity::render()
 {
 	
-	
-
 	Camera* camera = Camera::current;
 	Matrix44 model = this->getGlobalMatrix();
 	
@@ -53,7 +51,7 @@ void MeshEntity::render()
 		Entity::render();
 		return;
 	}
-
+	
 	shader->enable();
 	shader->setUniform("u_model", parent==NULL?model:globalModel);
 	shader->setUniform("u_viewprojection", camera->viewprojection_matrix);
@@ -89,13 +87,15 @@ bool MeshEntity::getShouldRenderEntity()
 	Camera* cam = Camera::current;
 	float distance = cam->getDistanceFromCamera(this->getPosition());
 	if (distance>maxRenderDist) return false;
-	
-	float sphere_radius = this->mesh->radius;
+	if (checkAngle) {
+		float sphere_radius = this->mesh->radius;
 
-	//discard objects whose bounding sphere is not inside the camera frustum
-	Vector3 scale= this->getScale();
-	sphere_radius *= (scale.x + scale.y + scale.z) / 3;
-	return cam->testSphereInFrustum(this->getPosition(), this->mesh->radius*sphere_radius);
+		//discard objects whose bounding sphere is not inside the camera frustum
+		Vector3 scale = this->getScale();
+		sphere_radius *= (scale.x + scale.y + scale.z) / 3;
+		return cam->testSphereInFrustum(this->getPosition(), this->mesh->radius * sphere_radius);
+	}
+	return true;
 		
 	
 }
@@ -104,6 +104,11 @@ void MeshEntity::setCollisionMesh(Mesh* mesh)
 {
 	hasCollisionMesh = true;
 	this->collisionMesh = mesh;
+}
+
+void MeshEntity::setCheckAngle(bool state)
+{
+	this->checkAngle = state;
 }
 
 

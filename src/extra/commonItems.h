@@ -14,5 +14,13 @@ enum class eDirection {
 enum class eStageType {
 	BASE,
 	PROCEDURAL_WORLD,
-	FPS,
+	DEPO,
+};
+
+enum ePickupType {
+	empty,
+	wood,
+	iron,
+	stone,
+	coal
 };

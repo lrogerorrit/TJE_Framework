@@ -35,6 +35,9 @@ public:
 	bool hasCollisionMesh = false;
 	Mesh* collisionMesh = NULL;
 
+	bool collidesWithShark = true;
+	
+	bool checkAngle = true;
 	
 
 	//void render();
@@ -44,6 +47,7 @@ public:
 	bool getShouldRenderEntity();
 
 	void setCollisionMesh(Mesh* mesh);
+	void setCheckAngle(bool state);
 	
 	void setLowPoly(Mesh* mesh);
 	inline void setLowPolyDistance(float dist) { this->minDistanceForLowPoly= dist; }

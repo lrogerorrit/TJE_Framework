@@ -20,6 +20,8 @@ const float rope_speed = 10;
 
 float y_pos = 0;
 
+Player* Player::instance = NULL;
+
 Player::Player()
 {
 	Mesh* mesh = Mesh::Get("data/playerTemp.obj");
@@ -31,6 +33,7 @@ Player::Player()
 	this->trainHandler = TrainHandler::instance;
 	this->position = Vector3(0, 50, 0);
 	this->playerMesh->setPosition(Vector3(0, 50, 0));
+	instance = this;
 	
 }
 
@@ -148,18 +151,18 @@ void Player::updatePlayer(double seconds_elapsed)
 	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/) {
 		
 		
-		std::cout << "In train ";
+		
 		moveFront = Vector3(front.x, 0, front.z);
 		moveRight = Vector3(right.x, 0, right.z);
 		if ((oldPos.y - 15) > y_pos) {
-			std::cout << "Falling";
+			
 			acceleration = 1;
 			deceleration = 10;
 			speedVector += Vector3(0, -15, 0) * seconds_elapsed;
 			dontDecelY = true;
 		}
 		else {
-			std::cout << "Not falling";
+			
 			acceleration = 13;
 			deceleration = 40;
 			moveWithTrain = true;
@@ -170,7 +173,7 @@ void Player::updatePlayer(double seconds_elapsed)
 				speedVector = Vector3(speedVector.x, 0, speedVector.z);
 			
 		}
-		std::cout << std::endl;
+		
 	}
 	else {
 		acceleration = 10;// 0.05f;

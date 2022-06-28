@@ -3,18 +3,18 @@
 
 
 //TODO: remove singleton for scene
-Scene* Scene::instance = nullptr;
+
 
 Scene::Scene()
 {
-	instance = this;
+	
 	this->setRoot(new Entity());
 	
 }
 
 void Scene::render()
 {
-	if (this->root == nullptr) return;
+	if (!this || !this->root) return;
 	this->root->render();
 }
 

@@ -3,11 +3,14 @@
 #include "curves.h"
 
 class BoundingBox;
+class Scene;
+
 
 
 struct trainCarData {
 	Entity* entity;
 	MeshEntity* trainMesh;
+	MeshEntity* hornMesh;
 	int carIndex;
 	double curvePos;
 	int segment;
@@ -23,8 +26,10 @@ private:
 	int numCars = 0;
 	double frontCarPos = 0.0;
 	BeizerCurve* activeCurve=NULL;
-	double speed = .8;
+	double speed = .03;
 	bool collidedWithPlayer = false;
+
+	
 	
 public:
 
@@ -50,6 +55,7 @@ public:
 	double getSpeed();
 	
 	void update(double dt);
+	
 
 	trainCarData getCarData(int carNum);
 
