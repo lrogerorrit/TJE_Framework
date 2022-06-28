@@ -24,6 +24,11 @@ class InventoryHandler
 private:
 	GUImanager* guiManager;
 	Game* game;
+
+	//Options
+	bool showSlotOptions = false;
+	int activeSlotOptions = -1;
+	
 public:
 	
 	static InventoryHandler* instance;
@@ -44,7 +49,7 @@ public:
 	bool isEmpty();
 
 	
-
+	void renderOptions();
 	void render();
 	void renderold();
 	

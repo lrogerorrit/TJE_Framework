@@ -121,9 +121,12 @@ void InventoryHandler::removeFromSlot(int slot)
 {
 	auto& data = inventory[slot];
 	if (data.quantity == 1) {
-		inventory[i].quantity = 0;
-		inventory[i].tex = Texture::Get("data/assets/cube.png");
-		inventory[i].type = ePickupType::empty;
+		data.quantity = 0;
+		data.tex = Texture::Get("data/assets/cube.png");
+		data.type = ePickupType::empty;
+	}
+	else if(data.quantity>1) {
+		data.quantity--;
 	}
 }
 
@@ -167,8 +170,16 @@ bool InventoryHandler::isEmpty()
 	return true;
 }
 
+void InventoryHandler::renderOptions()
+{
+	
+	guiManager->doFrame(Vector2(game->window_width / 2,game->window_height / 2), Vector2(400, 250), Vector4(.5, .5, .5, 1));
+	//guiManager->doButton(Vector2(game->window_width/2,game->window_height/2)
+}
+
 void InventoryHandler::render()
 {
+	return renderOptions();
 	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
 	guiManager->doFrame(Vector2(game->window_width/2, game->window_height/2), Vector2(400, 250), Vector4(.1, .1, .1, 1.0));
 	for (int i = 0; i < 8;++i) {
@@ -185,7 +196,7 @@ void InventoryHandler::render()
 		}
 		std::string text = data.quantity >= 10 ? std::to_string(data.quantity) : ("0" + std::to_string(data.quantity));
 		guiManager->doText(Vector2(topLeft.x + (xPos * 100) + 48, topLeft.y + 55 + yPos * 100), text,3, Vector3(1,1,1));
-		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1))
+		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1));
 		
 		
 		
