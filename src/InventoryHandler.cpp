@@ -130,6 +130,14 @@ void InventoryHandler::removeFromSlot(int slot)
 	}
 }
 
+void InventoryHandler::emptySlot(int slot)
+{
+	auto& data = inventory[slot];
+	data.quantity = 0;
+	data.tex = Texture::Get("data/assets/cube.png");
+	data.type = ePickupType::empty;
+}
+
 void InventoryHandler::removeAllFromInventory(ePickupType type)
 {
 	for (int i = 0; i < inventory.size(); ++i) {
@@ -173,30 +181,58 @@ bool InventoryHandler::isEmpty()
 void InventoryHandler::renderOptions()
 {
 	
-	guiManager->doFrame(Vector2(game->window_width / 2,game->window_height / 2), Vector2(400, 250), Vector4(.5, .5, .5, 1));
-	//guiManager->doButton(Vector2(game->window_width/2,game->window_height/2)
+	guiManager->doFrame(Vector2(game->window_width / 2,game->window_height / 2), Vector2(400, 300), Vector4(.5, .5, .5, 1));
+	
+	if (guiManager->doTextButton(Vector2(game->window_width / 2, (game->window_height / 2) - 100),Vector2(300,60), "Drop",5) == 2) {
+		if (activeSlotOptions != -1) {
+			removeFromSlot(activeSlotOptions);
+			activeSlotOptions = -1;
+			showSlotOptions = false;
+			
+		}
+		
+	}
+
+	if (guiManager->doTextButton( Vector2(game->window_width / 2, (game->window_height / 2) + 0),Vector2(300,60), "Drop all",5) == 2) {
+		if (activeSlotOptions != -1) {
+			emptySlot(activeSlotOptions);
+			activeSlotOptions = -1;
+			showSlotOptions = false;
+
+		}
+
+	}
+	if (guiManager->doTextButton( Vector2(game->window_width / 2, (game->window_height / 2) + 100),Vector2(300,60), "Close",5) == 2) {
+		if (activeSlotOptions != -1) {
+			
+			activeSlotOptions = -1;
+			showSlotOptions = false;
+
+		}
+
+	}
+	
 }
 
 void InventoryHandler::render()
 {
-	return renderOptions();
+	if(showSlotOptions)
+		return renderOptions();
 	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
 	guiManager->doFrame(Vector2(game->window_width/2, game->window_height/2), Vector2(400, 250), Vector4(.1, .1, .1, 1.0));
 	for (int i = 0; i < 8;++i) {
 		auto data = inventory[i];
 		int xPos = i % 4;
 		int yPos = floor(i / 4);
-		if (guiManager->doButton(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(70, 70), Vector4(1, 1, 1, 1))) {
+		if (guiManager->doButton(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(70, 70), Vector4(1, 1, 1, 1))==2) {
 			if (data.type != ePickupType::empty) {
-				//this->removeSlot(/)
-				data.quantity = 0;
-				data.tex = Texture::Get("data/assets/cube.png");
-				data.type = ePickupType::empty;
+				showSlotOptions = true;
+				activeSlotOptions = i;
 			}
 		}
 		std::string text = data.quantity >= 10 ? std::to_string(data.quantity) : ("0" + std::to_string(data.quantity));
-		guiManager->doText(Vector2(topLeft.x + (xPos * 100) + 48, topLeft.y + 55 + yPos * 100), text,3, Vector3(1,1,1));
 		guiManager->doImage(Vector2(topLeft.x + (xPos * 100) + 50, topLeft.y + 50 + yPos * 100), Vector2(60, 60), data.tex, Vector4(1, 1, 1, 1));
+		guiManager->doText(Vector2(topLeft.x + (xPos * 100) + 48, topLeft.y + 55 + yPos * 100), text,3, Vector3(1,1,1));
 		
 		
 		

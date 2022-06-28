@@ -43,6 +43,7 @@ public:
 	int addToInventory(ePickupType type);
 	void removeFromInventory(ePickupType type);
 	void removeFromSlot(int slot);
+	void emptySlot(int slot);
 	void removeAllFromInventory(ePickupType type);
 	void removeAllFromInventory();
 	bool isFull();

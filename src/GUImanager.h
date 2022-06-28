@@ -39,7 +39,7 @@ public:
 
 	int doFrame(Vector2 position,Vector2 size,Vector4 color);
 	int doButton(Vector2 position,Vector2 size,Vector4 color);
-	int doTextButton(Vector2 position, Vector2 size, std::string text, Vector4 color = Vector4(1, 1, 1, 1));
+	int doTextButton(Vector2 position, Vector2 size, std::string text, int scale=2, Vector3 textColor=Vector3(0,0,0), Vector4 color = Vector4(1, 1, 1, 1));
 	int doImage(Vector2 position, Vector2 size, Texture* texture, Vector4 color= Vector4(1,1,1,1));
 	int doText(Vector2 position, std::string text, int scale=2, Vector3 color = Vector3(1, 1, 1));
 	

@@ -117,7 +117,7 @@ int GUImanager::doButton(Vector2 position, Vector2 size, Vector4 color)
 	this->doFrame(position, size, color);
 	if (mousePos.x > topLeft.x && mousePos.x < topLeft.x + size.x && mousePos.y > topLeft.y && mousePos.y < topLeft.y + size.y)
 	{
-		return game->isLeftMouseDown()?(int)Gui_State::CLICKING:(int)Gui_State::INSIDE;
+		return game->wasLeftMouseDown()?(int)Gui_State::CLICKING:(int)Gui_State::INSIDE;
 	}
 	else
 	{
@@ -126,10 +126,10 @@ int GUImanager::doButton(Vector2 position, Vector2 size, Vector4 color)
 	
 }
 
-int GUImanager::doTextButton(Vector2 position, Vector2 size, std::string text, Vector4 color)
+int GUImanager::doTextButton(Vector2 position, Vector2 size, std::string text, int scale, Vector3 textColor,  Vector4 color)
 {
 	int state= doButton(position, size, color);
-	drawText(position.x- (size.x / 2.2), position.y ,text,Vector3(1,1,1),4.0);
+	drawText(position.x- (size.x /2)+size.x*.05, position.y - (size.y / 2) + size.y * .25,text,textColor,scale);
 	return state;
 }
 
@@ -161,7 +161,7 @@ int GUImanager::doImage(Vector2 position, Vector2 size, Texture* texture, Vector
 	
 	if (mousePos.x > topLeft.x && mousePos.x < topLeft.x + size.x && mousePos.y > topLeft.y && mousePos.y < topLeft.y + size.y)
 	{
-		return game->isLeftMouseDown() ? (int)Gui_State::CLICKING : (int)Gui_State::INSIDE;
+		return game->wasLeftMouseDown() ? (int)Gui_State::CLICKING : (int)Gui_State::INSIDE;
 	}
 	else
 	{

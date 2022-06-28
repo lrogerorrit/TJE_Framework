@@ -116,6 +116,16 @@ DepositionStage* loadTestDepo() {
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
 {
+	prevMouseState.reserve(3);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	mouseState.reserve(3);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	
+	
 	this->window_width = window_width;
 	this->window_height = window_height;
 	this->window = window;
@@ -271,8 +281,8 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
-	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
 	guiManager->update();
+	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
 	float playerSpeed = 5.0f * seconds_elapsed;
 	float rotSpeed = 10.0f * seconds_elapsed;
 	//example
@@ -281,12 +291,24 @@ void Game::update(double seconds_elapsed)
 	//this->activeScene->update(seconds_elapsed);
 	this->activeStage->update(seconds_elapsed);
 	
+	
+	
+	
 	//mouse input to rotate the cam
 	if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) //is left button pressed?
 	{
 		camera->rotate(Input::mouse_delta.x * 0.005f, Vector3(0.0f,-1.0f,0.0f));
 		camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
 	}
+
+	for (int i = 0; i < 3; ++i) {
+		prevMouseState[i] = (bool) mouseState[i];
+		
+	}
+	mouseState[0] = Input::mouse_state & SDL_BUTTON_LEFT;
+	mouseState[1] = Input::mouse_state & SDL_BUTTON_MIDDLE;
+	mouseState[2] = Input::mouse_state & SDL_BUTTON_RIGHT;
+		
 	
 	/*
 	if (playTrack) {
@@ -418,6 +440,23 @@ bool Game::isRightMouseDown()
 bool Game::isMiddleMouseDown()
 {
 	return Input::isMousePressed(2);
+}
+
+bool Game::wasLeftMouseDown()
+{
+	bool state= this->mouseState[0]==1 && this->prevMouseState[0]==0;
+	std::cout << this->mouseState[0] << " - " << this->prevMouseState[0] <<": "<<state << std::endl;
+	return state;
+}
+
+bool Game::wasRightMouseDown()
+{
+	return this->mouseState[2] && !this->prevMouseState[2];
+}
+
+bool Game::wasMiddleMouseDown()
+{
+	return this->mouseState[1] && !this->prevMouseState[1];
 }
 
 void Game::addToDestroyQueue(Entity* ent)

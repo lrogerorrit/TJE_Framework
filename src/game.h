@@ -16,8 +16,13 @@ class GUImanager;
 
 class Game
 {
+	
+private:
+	std::vector<bool> prevMouseState;
+	std::vector<bool> mouseState;
 public:
 	static Game* instance;
+	
 
 	//window
 	SDL_Window* window;
@@ -62,6 +67,9 @@ public:
 	bool isLeftMouseDown();
 	bool isRightMouseDown();
 	bool isMiddleMouseDown();
+	bool wasLeftMouseDown();
+	bool wasRightMouseDown();
+	bool wasMiddleMouseDown();
 	
 	//custom vars	
 	std::vector<Entity*> destroyQueue;
