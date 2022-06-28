@@ -6,9 +6,11 @@ class BoundingBox;
 class Scene;
 
 
+
 struct trainCarData {
 	Entity* entity;
 	MeshEntity* trainMesh;
+	MeshEntity* hornMesh;
 	int carIndex;
 	double curvePos;
 	int segment;
@@ -24,7 +26,7 @@ private:
 	int numCars = 0;
 	double frontCarPos = 0.0;
 	BeizerCurve* activeCurve=NULL;
-	double speed = .1;
+	double speed = .03;
 	bool collidedWithPlayer = false;
 
 	

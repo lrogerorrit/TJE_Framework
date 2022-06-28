@@ -3,6 +3,7 @@
 #include "Stage.h"
 
 
+
 class TrackHandler;
 class TrainHandler;
 class Scene;
@@ -12,6 +13,7 @@ class InventoryHandler;
 
 class SpaceShark;
 class Player;
+
 
 
 enum class eSceneryType {
@@ -31,7 +33,7 @@ struct sceneryData {
 	eSceneryType type;
 	std::vector<Vector3> positions;
 
-	sceneryData(std::vector<Vector3>& positions, eSceneryType type);
+	sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool useRockShader=true);
 	
 };
 
@@ -44,6 +46,7 @@ class ProceduralWorldStage :
 		SpaceShark* spaceShark=NULL;
 		Player* player;
 		InventoryHandler* inventoryHandler;
+		
 		
 		std::vector<sceneryData> scenery;
 		CubeMap* cubeMap = NULL;
@@ -68,6 +71,8 @@ class ProceduralWorldStage :
 		Vector4 getNearResource();
 
 		void getResource(Vector4 data);
+
+		void checkHorn();
 
 		void update(double deltaTime) ;
 		void render();

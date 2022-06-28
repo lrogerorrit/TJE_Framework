@@ -445,7 +445,7 @@ bool Game::isMiddleMouseDown()
 bool Game::wasLeftMouseDown()
 {
 	bool state= this->mouseState[0]==1 && this->prevMouseState[0]==0;
-	std::cout << this->mouseState[0] << " - " << this->prevMouseState[0] <<": "<<state << std::endl;
+	
 	return state;
 }
 
