@@ -202,6 +202,7 @@
     <ClInclude Include="..\..\src\InventoryHandler.h" />
     <ClInclude Include="..\..\src\GUImanager.h" />
     <ClInclude Include="..\..\src\itemChest.h" />
+
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extra">

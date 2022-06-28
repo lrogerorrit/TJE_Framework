@@ -19,10 +19,11 @@
 #include "extra/SceneParser.h"
 #include "stages/DepositionStage.h"
 #include "SpaceShark.h"
+#include <bass.h>
 #include <time.h> 
 #include "InventoryHandler.h"
-
 #include"GUImanager.h"
+
 
 
 //some globals
@@ -196,6 +197,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
 	st->initSpaceShark();
+
+	
+
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
