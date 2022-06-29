@@ -193,6 +193,7 @@ void SpaceShark::updateAttack(double deltaTime)
 	else if (this->train_separation<=attackDamageDistance) {
 		std::cout << "Attack count " << this->attackCount << std::endl;
 		//TODO: Remove health from train
+		trainHandler->damageTrain(25);
 		if (this->attackCount >= this->maxAttackTimes) {
 			this->attackCount = 0;
 			this->scareLevels = 0;

@@ -246,6 +246,7 @@ void ProceduralWorldStage::render()
 
 	//UI Render
 	inventoryHandler->render();
+	trainHandler->renderHealth();
 
 }
 

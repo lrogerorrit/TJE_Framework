@@ -5,6 +5,8 @@
 class BoundingBox;
 class Scene;
 
+class GUImanager;
+
 
 
 struct trainCarData {
@@ -28,7 +30,8 @@ private:
 	BeizerCurve* activeCurve=NULL;
 	double speed = .03;
 	bool collidedWithPlayer = false;
-
+	GUImanager* guiManager=NULL;
+	int health = 100;
 	
 	
 public:
@@ -50,6 +53,9 @@ public:
 	
 	std::vector<Matrix44> getTrainDirPos();
 	
+	void damageTrain(int damage);
+	int getHealth();
+	
 	
 	void setSpeed(double speed);
 	double getSpeed();
@@ -61,6 +67,7 @@ public:
 
 	bool getCollidedWithPlayer();
 
+	void renderHealth();
 	
 
 	

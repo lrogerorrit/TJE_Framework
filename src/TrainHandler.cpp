@@ -2,6 +2,8 @@
 #include "mesh.h"
 #include "stages/StagesInclude.h"
 #include "Scene.h"
+#include "GUImanager.h"
+#include "game.h"
 
 
 TrainHandler* TrainHandler::instance = NULL;
@@ -9,12 +11,14 @@ TrainHandler* TrainHandler::instance = NULL;
 TrainHandler::TrainHandler()
 {
 	instance = this;
+	guiManager = GUImanager::instance;
 }
 
 TrainHandler::TrainHandler(BeizerCurve* curve)
 {
 	this->activeCurve = curve;
 	instance = this;
+	guiManager = GUImanager::instance;
 }
 
 void TrainHandler::setActiveCurve(BeizerCurve* curve)
@@ -80,6 +84,16 @@ std::vector<Matrix44> TrainHandler::getTrainDirPos()
 	return toReturn;
 }
 
+void TrainHandler::damageTrain(int damage)
+{
+	this->health = clamp(this->health - damage, 0, 100);
+}
+
+int TrainHandler::getHealth()
+{
+	return health;
+}
+
 void TrainHandler::setSpeed(double speed)
 {
 	this->speed = speed;
@@ -141,6 +155,14 @@ trainCarData TrainHandler::getCarData(int carNum)
 bool TrainHandler::getCollidedWithPlayer()
 {
 	return this->collidedWithPlayer;
+}
+
+void TrainHandler::renderHealth()
+{
+	int windowWidth = Game::instance->window_width;
+	Vector2 pos = Vector2(windowWidth * .6, 5);
+	std::string text= "Train Health: " + std::to_string(this->health);
+	guiManager->doText(pos, text, 3);
 }
 
 
