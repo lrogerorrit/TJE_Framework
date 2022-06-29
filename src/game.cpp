@@ -401,11 +401,11 @@ void Game::onGamepadButtonUp(SDL_JoyButtonEvent event)
 
 void Game::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
+	/*if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
 	{
 		mouse_locked = !mouse_locked;
 		SDL_ShowCursor(!mouse_locked);
-	}
+	}*/
 }
 
 void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
