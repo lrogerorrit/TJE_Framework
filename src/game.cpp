@@ -19,10 +19,12 @@
 #include "extra/SceneParser.h"
 #include "stages/DepositionStage.h"
 #include "SpaceShark.h"
+#include <bass.h>
 #include <time.h> 
 #include "InventoryHandler.h"
-
 #include"GUImanager.h"
+#include "extra/SoundManager.h"
+
 
 
 //some globals
@@ -150,6 +152,8 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 	
 	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	
+	new SoundManager();
 	new TrackHandler();
 	new CubeMap();
 	new SceneParser();
@@ -196,6 +200,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
 	st->initSpaceShark();
+
+	
+
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
@@ -445,7 +452,7 @@ bool Game::isMiddleMouseDown()
 bool Game::wasLeftMouseDown()
 {
 	bool state= this->mouseState[0]==1 && this->prevMouseState[0]==0;
-	std::cout << this->mouseState[0] << " - " << this->prevMouseState[0] <<": "<<state << std::endl;
+	
 	return state;
 }
 

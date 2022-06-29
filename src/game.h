@@ -13,6 +13,7 @@ class Entity;
 class Scene;
 class Stage;
 class GUImanager;
+class Player;
 
 class Game
 {
@@ -37,6 +38,8 @@ public:
 	bool must_exit;
 	bool cameraLocked;
 	GUImanager* guiManager;
+
+	Player* player;
 
 	//some vars
 	Camera* camera; //our global camera

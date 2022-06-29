@@ -47,7 +47,7 @@ private:
 	bool checkCollisions = true;
 	
 	//Attack
-	float maxScareDistance = 20;
+	float maxScareDistance = 50;
 	int attackCount = 0;
 	int maxAttackTimes = 5;
 	float scareLevels = 0.0;
