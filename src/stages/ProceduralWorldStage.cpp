@@ -200,7 +200,7 @@ void ProceduralWorldStage::checkHorn() {
 	
 	if(Input::wasKeyPressed(SDL_SCANCODE_E) && dist<20) {
 		std::cout << "pressed horn\n";
-		soundManager->PlaySoundW("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
+		soundManager->playSound("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
 		//soundManager->PlaySound("data/audio/soundEffects/horns.wav",hornPos);
 		this->spaceShark->scareShark(hornPos);
 		

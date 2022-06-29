@@ -1,7 +1,8 @@
 #include "SoundManager.h"
-#include "../framework.h"
 #include "../game.h"
 #include "../Player.h"
+#include "Audio.h"
+
 
 
 SoundManager* SoundManager::instance = NULL;
@@ -16,7 +17,38 @@ void SoundManager::initBass3D()
 
 SoundManager::SoundManager()
 {
+	//this->pos = new BASS_3DVECTOR(0, 0, 0);
+	initBass3D();
+	vel = new BASS_3DVECTOR(0, 0, 0);
+	front= new BASS_3DVECTOR(0, 0, 0);
+	top= new BASS_3DVECTOR(0, 0, 0);
 	instance = this;
+	player = Player::instance;
+	
+}
+
+Audio* SoundManager::loadAudio(const char* fileName)
+{
+	loadedAudios[fileName] = new Audio(fileName);
+}
+
+
+
+void SoundManager::playAudio(const char* fileName,float volume)
+{
+	if(!loadedAudios[fileName])
+		{
+		loadAudio(fileName);
+	}
+	loadedAudios[fileName]->play(volume);
+}
+
+void SoundManager::stopAudio(const char* fileName)
+{
+	if(loadedAudios[fileName])
+		{
+		loadedAudios[fileName]->stop();
+	}
 }
 
 void SoundManager::UpdatePlayerPos() {
@@ -35,19 +67,22 @@ void SoundManager::UpdatePlayerPos() {
 
 }
 
-void SoundManager::PlaySound(const char* fileName, Vector3 soundPos) {
+void SoundManager::playSound(const char* fileName, Vector3 soundPos,float volume) {
 	Vector3 camPos = Game::instance->player->position;
 	double dist = sqrt(dot(soundPos, camPos));
 	BASS_Set3DFactors(dist, 1.0, 1.0);
 	BASS_Apply3D();
 
-	audios.Play(fileName);
+	this->playAudio(fileName,volume);
+	//audios.Play(fileName);
 
 
 }
 
 
-void SoundManager::PlaySoundFromPos(const char* fileName, Vector3 soundPos, Vector3 camPos, Vector3 playerVel, Vector3 playerFront, Vector3 playerTop) {
+
+
+void SoundManager::playSoundFromPos(const char* fileName, Vector3 soundPos, Vector3 camPos, Vector3 playerVel, Vector3 playerFront, Vector3 playerTop) {
 	double dist = sqrt(dot(soundPos, camPos));
 	BASS_Set3DFactors(dist, 1.0, 1.0);
 	BASS_3DVECTOR* pos = new BASS_3DVECTOR(camPos.x, camPos.y, camPos.z);
@@ -58,7 +93,8 @@ void SoundManager::PlaySoundFromPos(const char* fileName, Vector3 soundPos, Vect
 	BASS_Apply3D();
 
 
-	audios.Play(fileName);
+	//audios.Play(fileName);
+	playAudio(fileName);
 }
 
 

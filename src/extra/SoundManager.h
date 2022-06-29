@@ -1,30 +1,41 @@
 #pragma once
-#include <bass.h>
+
 #include "../framework.h"
-#include "Audio.h"
+#include <iostream>
+#include <string>
+#include <map>
+
+struct BASS_3DVECTOR;
+class Audio;
+class Player;
+
 
 class SoundManager
 {
+
+private:
+	Player* player;
+	Audio* loadAudio(const char* fileName);
+	void playAudio(const char* fileName,float volume=1);
+	void stopAudio(const char* fileName);
+	BASS_3DVECTOR* pos = nullptr;
+	BASS_3DVECTOR* vel = nullptr;
+	BASS_3DVECTOR* front = nullptr;
+	BASS_3DVECTOR* top = nullptr;
+		
 public:
+	std::map<std::string, Audio*> loadedAudios;
 	static SoundManager* instance;
+
+	
 
 	SoundManager();
 	
 	void initBass3D();
 
-	void PlaySound(const char* fileName, Vector3 soundPos);
+	void playSound(const char* fileName, Vector3 soundPos, float volume=1);
 	void UpdatePlayerPos();
-	void PlaySoundFromPos(const char* fileName, Vector3 soundPos, Vector3 camPos, Vector3 playerVel, Vector3 playerFront, Vector3 playerTop);
-
-	BASS_3DVECTOR* pos;
-	BASS_3DVECTOR* vel;
-	BASS_3DVECTOR* front;
-	BASS_3DVECTOR* top;
-
-	Audio audios;
-	
-
-	
+	void playSoundFromPos(const char* fileName, Vector3 soundPos, Vector3 camPos, Vector3 playerVel, Vector3 playerFront, Vector3 playerTop);
 
 };
 
