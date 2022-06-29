@@ -212,6 +212,9 @@ void ProceduralWorldStage::checkHorn() {
 
 void ProceduralWorldStage::update(double deltaTime)
 {
+	if (trainHandler->getHealth() == 0) {
+		//TODO: end game;
+	}
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
 		this->trainHandler->update(deltaTime);

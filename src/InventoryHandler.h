@@ -51,7 +51,7 @@ public:
 	bool isFull();
 	bool isEmpty();
 
-	void setOpen(bool state) { isOpen = state; };
+	void setOpen(bool state);
 	bool getIsOpen() { return isOpen; }
 	
 	void renderOptions();

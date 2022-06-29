@@ -178,6 +178,12 @@ bool InventoryHandler::isEmpty()
 	return true;
 }
 
+void InventoryHandler::setOpen(bool state)
+{
+	this->isOpen = state;
+	this->guiManager->setIsGuiOpen(state);
+}
+
 void InventoryHandler::renderOptions()
 {
 	

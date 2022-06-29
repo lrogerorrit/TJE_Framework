@@ -37,6 +37,7 @@ public:
 	int fps;
 	bool must_exit;
 	bool cameraLocked;
+	bool shouldCamBeLocked = false;;
 	GUImanager* guiManager;
 
 	Player* player;

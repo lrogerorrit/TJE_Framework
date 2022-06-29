@@ -288,6 +288,7 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	
 	guiManager->update();
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
 	float playerSpeed = 5.0f * seconds_elapsed;
@@ -334,25 +335,31 @@ void Game::update(double seconds_elapsed)
 
 
 	//Coses URI
-	if (cameraLocked) {
-		SDL_ShowCursor(false);
-		player->testCollisions();
-		player->updatePlayer(seconds_elapsed);
+	if (guiManager->getIsGuiOpen())
+		cameraLocked = false;
+	else
+		cameraLocked = shouldCamBeLocked;
+	
 
-	}
-	else {
-		SDL_ShowCursor(true);
+	SDL_ShowCursor(!cameraLocked);
+	
+	
+	
+	/*
 		if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
 		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
-		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);
+		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);*/
 
-	}
+
+	player->testCollisions();
+	player->updatePlayer(seconds_elapsed);
 
 	if (Input::wasKeyPressed(SDL_SCANCODE_O))
 	{
 		cameraLocked = !cameraLocked;
+		shouldCamBeLocked = !shouldCamBeLocked;
 		Input::centerMouse();
 	};
 
