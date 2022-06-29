@@ -32,6 +32,7 @@ private:
 	bool collidedWithPlayer = false;
 	GUImanager* guiManager=NULL;
 	int health = 100;
+	int maxHealth = 100;
 	
 	
 public:
@@ -54,7 +55,12 @@ public:
 	std::vector<Matrix44> getTrainDirPos();
 	
 	void damageTrain(int damage);
+	void fixTrain();
+	void addToMaxHealth(int quantity);
 	int getHealth();
+	int getMaxHealth();
+	
+	
 	
 	
 	void setSpeed(double speed);

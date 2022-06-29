@@ -89,9 +89,23 @@ void TrainHandler::damageTrain(int damage)
 	this->health = clamp(this->health - damage, 0, 100);
 }
 
+void TrainHandler::fixTrain()
+{
+	this->health = 100;
+}
+
+void TrainHandler::addToMaxHealth(int quantity)
+{
+	this->maxHealth += quantity;
+}
+
 int TrainHandler::getHealth()
 {
 	return health;
+}
+int TrainHandler::getMaxHealth()
+{
+	return maxHealth;
 }
 
 void TrainHandler::setSpeed(double speed)

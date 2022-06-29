@@ -29,6 +29,7 @@ public:
 	SDL_Window* window;
 	int window_width;
 	int window_height;
+	int keyState = 0;
 
 	//some globals
 	long frame;

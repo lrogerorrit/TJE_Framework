@@ -112,10 +112,10 @@ int InventoryHandler::addToInventory(ePickupType type)
 	return addToInventory(type, 1);
 }
 
-void InventoryHandler::removeFromInventory(ePickupType type)
+/*void InventoryHandler::removeFromInventory(ePickupType type)
 {
 	removeFromInventory(type, 1);
-}
+}*/
 
 void InventoryHandler::removeFromSlot(int slot)
 {

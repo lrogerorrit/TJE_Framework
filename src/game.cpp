@@ -191,7 +191,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//End coses uri																				//////////
 
-	this->setActiveStage(testStage());
+	this->setActiveStage(loadTestDepo());
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
