@@ -4,12 +4,19 @@
 #include "../Player.h"
 
 
+SoundManager* SoundManager::instance = NULL;
+
 void SoundManager::initBass3D()
 {
 	if (BASS_Init(-1, 44100, BASS_DEVICE_3D, 0, NULL) == false) //-1 significa usar el por defecto del sistema operativo
 	{
 		//error abriendo la tarjeta de sonido...
 	}
+}
+
+SoundManager::SoundManager()
+{
+	instance = this;
 }
 
 void SoundManager::UpdatePlayerPos() {

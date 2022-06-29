@@ -13,6 +13,7 @@ class InventoryHandler;
 
 class SpaceShark;
 class Player;
+class SoundManager;
 
 
 
@@ -32,7 +33,7 @@ struct sceneryData {
 	GroupEntity* scenery;
 	eSceneryType type;
 	std::vector<Vector3> positions;
-
+	SoundManager* soundManager;
 	sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool useRockShader=true);
 	
 };
@@ -46,6 +47,7 @@ class ProceduralWorldStage :
 		SpaceShark* spaceShark=NULL;
 		Player* player;
 		InventoryHandler* inventoryHandler;
+		SoundManager* soundManager;
 		
 		
 		std::vector<sceneryData> scenery;

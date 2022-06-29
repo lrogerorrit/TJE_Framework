@@ -9,6 +9,8 @@
 #include "../Player.h"
 #include "../InventoryHandler.h"
 #include "../input.h"
+#include "../extra/SoundManager.h"
+#include "../framework.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
@@ -119,6 +121,7 @@ void ProceduralWorldStage::initStage()
 {
 	
 	this->inventoryHandler = InventoryHandler::instance;
+	this->soundManager = SoundManager::instance;
 	stageType = eStageType::PROCEDURAL_WORLD;
 	this->cubeMap = CubeMap::instance;
 	this->loadAssets();
@@ -181,6 +184,8 @@ void ProceduralWorldStage::getResource(Vector4 data)
 			scenerydata.positions.erase(scenerydata.positions.begin() + i);
 			scenerydata.scenery->removeObject(i);
 			inventoryHandler->addToInventory(pickupType);
+			
+			
 			//TODO: Play pickup sound
 			return;
 		}
@@ -195,6 +200,8 @@ void ProceduralWorldStage::checkHorn() {
 	
 	if(Input::wasKeyPressed(SDL_SCANCODE_E) && dist<20) {
 		std::cout << "pressed horn\n";
+		soundManager->PlaySoundW("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
+		//soundManager->PlaySound("data/audio/soundEffects/horns.wav",hornPos);
 		this->spaceShark->scareShark(hornPos);
 		
 	}

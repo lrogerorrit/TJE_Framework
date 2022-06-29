@@ -13,6 +13,7 @@ class Entity;
 class Scene;
 class Stage;
 class GUImanager;
+class Player;
 
 class Game
 {

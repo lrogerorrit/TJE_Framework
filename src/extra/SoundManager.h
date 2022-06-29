@@ -6,7 +6,10 @@
 class SoundManager
 {
 public:
+	static SoundManager* instance;
 
+	SoundManager();
+	
 	void initBass3D();
 
 	void PlaySound(const char* fileName, Vector3 soundPos);
