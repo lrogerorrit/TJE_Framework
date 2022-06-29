@@ -6,17 +6,18 @@
 
 
 
-GroupEntity::GroupEntity(Mesh* mesh, Texture* texture, Shader* shader, std::vector<Matrix44>& matrixList)
+GroupEntity::GroupEntity(Mesh* mesh, Texture* texture, Shader* shader, std::vector<Matrix44>& matrixList,Vector4 color)
 {
 	this->mesh = mesh;
 	this->texture = texture;
 	this->shader = shader;
 	this->matrixList = matrixList;
 	this->type = EntityType::GROUP;
+	this->color = color;
 	
 }
 
-GroupEntity::GroupEntity(Mesh* mesh, Mesh* lowPoly, Texture* texture, Shader* shader, std::vector<Matrix44>& matrixList)
+GroupEntity::GroupEntity(Mesh* mesh, Mesh* lowPoly, Texture* texture, Shader* shader, std::vector<Matrix44>& matrixList,Vector4 color)
 {
 	this->mesh = mesh;
 	this->texture = texture;
@@ -24,6 +25,7 @@ GroupEntity::GroupEntity(Mesh* mesh, Mesh* lowPoly, Texture* texture, Shader* sh
 	this->matrixList = matrixList;
 	this->setLowPoly(lowPoly);
 	this->type = EntityType::GROUP;
+	this->color = color;
 }
 
 GroupEntity::~GroupEntity()
@@ -38,7 +40,7 @@ void GroupEntity::render()
 	
 	shader->setUniform("u_viewprojection", cam->viewprojection_matrix);
 	shader->setUniform("u_texture", texture,0);
-	shader->setUniform("u_color", Vector4(1, 1, 1,1)); //todo change to variable
+	shader->setUniform("u_color", this->color); //todo change to variable
 	
 	for (int i = 0; i < matrixList.size(); i++)
 	{
@@ -89,6 +91,11 @@ void GroupEntity::addObject(Matrix44 objMatrix)
 void GroupEntity::removeObject(int i)
 {
 	matrixList.erase(matrixList.begin() + i);
+}
+
+void GroupEntity::setColor(Vector4 color)
+{
+	this->color = color;
 }
 
 void GroupEntity::setLowPoly(Mesh* mesh)

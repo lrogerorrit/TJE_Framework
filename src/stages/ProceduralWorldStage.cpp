@@ -8,17 +8,26 @@
 #include "../SpaceShark.h"
 #include "../Player.h"
 #include "../InventoryHandler.h"
+#include "../input.h"
+#include "../extra/SoundManager.h"
+#include "../framework.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
 	Mesh::Get("data/assets/rocks/rock2.obj");
 	Mesh::Get("data/assets/rocks/rock3.obj");
 	Mesh::Get("data/assets/rocks/rock4.obj");
+	Mesh::Get("data/assets/pickables/plank.obj");
 }
 
 void ProceduralWorldStage::generateProceduralScenery()
 {
-	float scales[4] = { .5,.5,.5,.5 }; //{ .5,.5, .5,30 };
+	Vector4 defaultCol = Vector4(1, 1, 1, 1);
+	float scales[5] = { .5,.5,.5,.5,10 }; //{ .5,.5, .5,30 };
+	float chances[5] = { 10,10,10,10,9 }; //{ .5,.5, .5,30 };
+	float separation[5] = { 3,3,3,3,5 };
+	Vector4 colors[5] = { defaultCol,defaultCol,defaultCol,defaultCol,Vector4(0.63,.49,0,1) };
+	bool useRockShader[5] = { true,true,true,true,false };
 	BeizerCurve* trackCurve = this->trackHandler->getActiveCurve();
 	this->player = Player::instance;
 	if (trackCurve == nullptr) return;
@@ -29,8 +38,8 @@ void ProceduralWorldStage::generateProceduralScenery()
 		eSceneryType scType = (eSceneryType)ii;
 		std::vector<Vector3> positions;
 		float len = trackCurve->arcLength;
-		
-		for (int i = 0; i <= trackCurve->segmentArray.size(); i+=3) {
+		if (randomIntRange(0, 10) > chances[ii])continue;
+		for (int i = 0; i <= trackCurve->segmentArray.size(); i+=separation[ii]) {
 			segmentData& data= trackCurve->segmentArray[i];
 			Matrix44 mat = Matrix44::IDENTITY;
 			Vector3 pos = data.position;
@@ -67,6 +76,7 @@ void ProceduralWorldStage::generateProceduralScenery()
 			positions.push_back(pos);
 		}
 		sceneryData data = sceneryData(positions, scType);
+		data.scenery->setColor(colors[ii]);
 		this->scenery.push_back(data);
 		data.scenery->groupScale(scales[ii]);
 		//this->scene->getRoot()->addChild(data.scenery);
@@ -83,6 +93,7 @@ void ProceduralWorldStage::renderScenery()
 {
 	
 	for (auto& sceneryEntity : this->scenery) {
+		if ((int)sceneryEntity.type < 4) continue;
 		sceneryEntity.scenery->render();
 		
 	}
@@ -108,7 +119,9 @@ ProceduralWorldStage::~ProceduralWorldStage()
 
 void ProceduralWorldStage::initStage()
 {
+	
 	this->inventoryHandler = InventoryHandler::instance;
+	this->soundManager = SoundManager::instance;
 	stageType = eStageType::PROCEDURAL_WORLD;
 	this->cubeMap = CubeMap::instance;
 	this->loadAssets();
@@ -171,10 +184,28 @@ void ProceduralWorldStage::getResource(Vector4 data)
 			scenerydata.positions.erase(scenerydata.positions.begin() + i);
 			scenerydata.scenery->removeObject(i);
 			inventoryHandler->addToInventory(pickupType);
+			
+			
 			//TODO: Play pickup sound
 			return;
 		}
 	}
+}
+
+void ProceduralWorldStage::checkHorn() {
+	Vector3 hornPos = this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation();
+	
+	Vector3 plPos = this->player->getPosition();
+	float dist= hornPos.distance(plPos);
+	
+	if(Input::wasKeyPressed(SDL_SCANCODE_E) && dist<20) {
+		std::cout << "pressed horn\n";
+		soundManager->playSound("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
+		//soundManager->PlaySound("data/audio/soundEffects/horns.wav",hornPos);
+		this->spaceShark->scareShark(hornPos);
+		
+	}
+	
 }
 
 
@@ -184,8 +215,18 @@ void ProceduralWorldStage::update(double deltaTime)
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
 		this->trainHandler->update(deltaTime);
+	checkHorn();
 	spaceShark->Update(deltaTime);
+
+	Vector4 resourceData= getNearResource();
+//	std::cout<<resourceData.x<<", "<<resourceData.y<<", "<<resourceData.z<<", "<<resourceData.w<<std::endl;
+	if (resourceData.w != -1 && Input::wasKeyPressed(SDL_SCANCODE_E)) {
+		getResource(resourceData);
+	}
+	
+
 	Stage::update(deltaTime);
+
 
 	
 }
@@ -201,7 +242,7 @@ void ProceduralWorldStage::render()
 
 }
 
-sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type)
+sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool useRockShader)
 {
 	std::vector<Matrix44> matrices;
 	for (Vector3& pos : positions) {
@@ -236,7 +277,7 @@ sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type)
 	
 	
 	Texture* texture = Texture::Get("data/assets/rocks/texture.png");
-	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/rockShader.fs");
+	Shader* shader = Shader::Get("data/shaders/basic.vs", useRockShader?"data/shaders/rockShader.fs": "data/shaders/texture.fs");
 	GroupEntity* group = new GroupEntity(mesh, texture, shader, matrices);
 	this->positions = positions;
 	

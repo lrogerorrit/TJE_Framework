@@ -24,14 +24,21 @@ void TrainHandler::setActiveCurve(BeizerCurve* curve)
 
 void TrainHandler::addCar(Entity* entity,MeshEntity* trainEntity)
 {
+	Mesh* hornMesh = Mesh::Get("data/assets/train/horn.obj");
+	Texture* hornTexture = Texture::Get("data/assets/train/horn.png");
+	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	trainCarData data;
 	data.entity = entity;
 	data.carIndex = this->numCars;
 	data.segment = 0; //TODO: get segment from front position
 	data.curvePos = 0;
 	data.trainMesh = trainEntity;
-
+	data.hornMesh = new MeshEntity(hornMesh, hornTexture, shader);
+	data.hornMesh->setPosition(Vector3(0, .8, -1.65));
+	data.hornMesh->setCheckAngle(false);
 	this->trainCarArray.push_back(data);
+	data.hornMesh->ingoreCollision = true;
+	data.trainMesh->addChild(data.hornMesh);
 
 	this->numCars++;
 }

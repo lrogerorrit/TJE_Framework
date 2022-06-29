@@ -83,7 +83,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32s.lib;bass.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,7 +102,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glu32.lib;glew32s.lib;bass.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final|Win32'">
@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\src\entities\Entity.cpp" />
     <ClCompile Include="..\..\src\entities\GroupEntity.cpp" />
     <ClCompile Include="..\..\src\entities\MeshEntity.cpp" />
+    <ClCompile Include="..\..\src\extra\Audio.cpp" />
     <ClCompile Include="..\..\src\extra\coldet\box.cpp" />
     <ClCompile Include="..\..\src\extra\coldet\box_bld.cpp" />
     <ClCompile Include="..\..\src\extra\coldet\coldet.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="..\..\src\extra\jpgd.cpp" />
     <ClCompile Include="..\..\src\extra\picopng.cpp" />
     <ClCompile Include="..\..\src\extra\SceneParser.cpp" />
+    <ClCompile Include="..\..\src\extra\SoundManager.cpp" />
     <ClCompile Include="..\..\src\extra\textparser.cpp" />
     <ClCompile Include="..\..\src\fbo.cpp" />
     <ClCompile Include="..\..\src\framework.cpp" />
@@ -177,6 +179,7 @@
     <ClInclude Include="..\..\src\entities\EntityInclude.h" />
     <ClInclude Include="..\..\src\entities\GroupEntity.h" />
     <ClInclude Include="..\..\src\entities\MeshEntity.h" />
+    <ClInclude Include="..\..\src\extra\Audio.h" />
     <ClInclude Include="..\..\src\extra\coldet\box.h" />
     <ClInclude Include="..\..\src\extra\coldet\coldet.h" />
     <ClInclude Include="..\..\src\extra\coldet\coldetimpl.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="..\..\src\extra\jpgd.h" />
     <ClInclude Include="..\..\src\extra\picopng.h" />
     <ClInclude Include="..\..\src\extra\SceneParser.h" />
+    <ClInclude Include="..\..\src\extra\SoundManager.h" />
     <ClInclude Include="..\..\src\extra\textparser.h" />
     <ClInclude Include="..\..\src\fbo.h" />
     <ClInclude Include="..\..\src\framework.h" />
