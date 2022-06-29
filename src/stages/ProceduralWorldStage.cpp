@@ -129,7 +129,7 @@ void ProceduralWorldStage::update(double deltaTime)
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
 		this->trainHandler->update(deltaTime);
-	spaceShark->Update(deltaTime);
+	//spaceShark->Update(deltaTime);
 	Stage::update(deltaTime);
 
 	
@@ -141,7 +141,7 @@ void ProceduralWorldStage::render()
 	renderScenery();
 	trainHandler->render();
 	trackHandler->renderTrack();
-	spaceShark->Render();
+	//spaceShark->Render();
 	Stage::render();
 
 }

@@ -147,7 +147,7 @@ void Player::updatePlayer(double seconds_elapsed)
 
 	 
 
-	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/ || isOnDepo) {
+	if (isOnTrain/* && !trainHandler->getCollidedWithPlayer()*/) {
 		
 		
 		
@@ -271,6 +271,112 @@ void Player::updatePlayer(double seconds_elapsed)
 
 
 
+}
+
+void Player::updatePlayerDepo(double seconds_elapsed)
+{	
+	
+	dontDecelY = false;
+	Camera* cam = Camera::current;
+	Game* game = Game::instance;
+	if (!game->cameraLocked) return;
+	acceleration = 15;
+
+	Vector3 oldPos = playerMesh->getPosition();
+	
+
+	Vector3 front = this->playerMesh->globalModel.frontVector();
+	Vector3 top = this->playerMesh->globalModel.topVector();
+	Vector3 right = front.cross(top);
+
+
+	float y_movement = -Input::mouse_delta.y * seconds_elapsed * y_sensitivity;
+	float x_movement = -Input::mouse_delta.x * seconds_elapsed * x_sensitivity;
+	pitch += y_movement;
+	pitch = clamp(pitch, -89, 89);
+	yaw += x_movement;
+	if (yaw >= 360.0f)
+		yaw -= 360.0f;
+	if (yaw < 0.0f)
+		yaw += 360.0f;
+
+	this->playerMesh->model.setRotation(yaw * DEG2RAD, Vector3(0, 1, 0));
+	this->playerMesh->model.rotate(pitch * DEG2RAD, right);
+	this->playerMesh->model.translateGlobal(oldPos.x, oldPos.y, oldPos.z);
+
+
+	Matrix44 newGlobal = this->playerMesh->getGlobalMatrix();
+	front = newGlobal.frontVector();
+	top = newGlobal.topVector();
+	right = newGlobal.rightVector();
+
+	Vector3 moveFront = front;
+	Vector3 moveRight = right;
+	bool canJump = false;
+	speedVector = Vector3(0,0, 0);
+
+	moveFront = Vector3(front.x, 0, front.z);
+	moveRight = Vector3(right.x, 0, right.z);
+
+	//Ground player
+	if ((oldPos.y - 15) > y_pos) {
+
+		speedVector += Vector3(0, -15, 0) * seconds_elapsed;
+		dontDecelY = true;
+	}
+	else {
+
+		canJump = true;
+		if (speedVector.y > .1)
+			speedVector = Vector3(speedVector.x, speedVector.y - (speedVector.y * .2 * seconds_elapsed), speedVector.z);
+		else
+			speedVector = Vector3(speedVector.x, 0, speedVector.z);
+
+	}
+
+	Input::centerMouse();
+
+	bool wasMoved = false;
+
+	if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) {
+		wasMoved = true;
+		speedVector += moveFront * (acceleration * seconds_elapsed);
+	}
+	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) {
+		wasMoved = true;
+		speedVector += moveFront * (-acceleration * seconds_elapsed);
+	}
+	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) {
+		wasMoved = true;
+		speedVector += moveRight * seconds_elapsed * acceleration;
+	}
+	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) {
+		wasMoved = true;
+		speedVector += moveRight * seconds_elapsed * (-acceleration);
+	}
+
+	
+	Vector3 newPos = oldPos + speedVector;
+	
+
+	if (newPos.x >= 25 || newPos.x <= -25) {
+		speedVector.x = 0;
+	}
+
+	if (newPos.z >= 25 || newPos.z <= -25) {
+		speedVector.z = 0;
+		
+	}
+
+	double height = 14 - oldPos.y;
+
+	this->playerMesh->model.translateGlobal(speedVector.x, height, speedVector.z);
+	
+
+	Vector3 newEye = this->playerMesh->getGlobalMatrix().getTranslation();
+
+	cam->lookAt(newEye, newEye + front, top);
+	this->position = newEye;
 }
 
 void Player::applyMovementForce(eDirection direction, double seconds_elapsed)

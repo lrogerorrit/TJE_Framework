@@ -77,7 +77,9 @@ Vector3* parseVector3(std::string str) {
 		toReturn->v[i] = std::stof(data[i]);
 	}
 	data.clear();
-	
+	int scale = 10;
+
+	toReturn = new Vector3(toReturn->x * scale, toReturn->y * scale, toReturn->z * scale);
 	return toReturn;
 }
 

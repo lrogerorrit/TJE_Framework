@@ -42,6 +42,7 @@ public:
 	void updatePlayer(double seconds_elapsed);
 	void applyMovementForce(eDirection direction,double seconds_elapsed);
 	bool testCollisions();
+	void updatePlayerDepo(double seconds_elapsed);
 	
 };
 
