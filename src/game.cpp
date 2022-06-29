@@ -271,11 +271,11 @@ void Game::render(void)
 	
 	
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 
 
 	//Draw inventory GUI
-	if (invOpen) inv->render();
+	//if (invOpen) inv->render();
 
 	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
 
@@ -356,7 +356,7 @@ void Game::update(double seconds_elapsed)
 		Input::centerMouse();
 	};
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_I)) invOpen = !invOpen;
+	
 
 	// end Coses URI
 	

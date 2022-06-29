@@ -224,6 +224,9 @@ void ProceduralWorldStage::update(double deltaTime)
 		getResource(resourceData);
 	}
 	
+	if (Input::wasKeyPressed(SDL_SCANCODE_I)) {
+		inventoryHandler->setOpen(!inventoryHandler->getIsOpen());
+	}
 
 	Stage::update(deltaTime);
 
@@ -239,6 +242,10 @@ void ProceduralWorldStage::render()
 	trackHandler->renderTrack();
 	spaceShark->Render();
 	Stage::render();
+	
+
+	//UI Render
+	inventoryHandler->render();
 
 }
 

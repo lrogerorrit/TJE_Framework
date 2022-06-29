@@ -29,6 +29,8 @@ private:
 	bool showSlotOptions = false;
 	int activeSlotOptions = -1;
 	
+	bool isOpen = false;
+	
 public:
 	
 	static InventoryHandler* instance;
@@ -49,6 +51,8 @@ public:
 	bool isFull();
 	bool isEmpty();
 
+	void setOpen(bool state) { isOpen = state; };
+	bool getIsOpen() { return isOpen; }
 	
 	void renderOptions();
 	void render();

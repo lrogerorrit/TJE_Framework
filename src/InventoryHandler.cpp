@@ -216,6 +216,7 @@ void InventoryHandler::renderOptions()
 
 void InventoryHandler::render()
 {
+	if (!isOpen) return;
 	if(showSlotOptions)
 		return renderOptions();
 	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
