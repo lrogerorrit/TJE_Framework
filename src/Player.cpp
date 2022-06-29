@@ -359,17 +359,19 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 	Vector3 newPos = oldPos + speedVector;
 	
 
-	if (newPos.x >= 25 || newPos.x <= -25) {
+	if (newPos.x >= 14 || newPos.x <= -25) {
 		speedVector.x = 0;
 	}
 
-	if (newPos.z >= 25 || newPos.z <= -25) {
+	if (newPos.z >= 25 || newPos.z <= -12.5) {
 		speedVector.z = 0;
-		
 	}
+
 
 	double height = 14 - oldPos.y;
 
+	if ((newPos.x > 6 && newPos.x < 15) && newPos.z > 16 ) height=height+3;
+	if (newPos.x > -15 && newPos.x < -5) height = height - 1;
 	this->playerMesh->model.translateGlobal(speedVector.x, height, speedVector.z);
 	
 

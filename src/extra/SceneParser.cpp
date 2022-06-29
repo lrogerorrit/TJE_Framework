@@ -8,7 +8,7 @@
 
 SceneParser* SceneParser::instance = NULL;
 
-std::string meshDirectory = "data/assets/";
+std::string meshDirectory = "data/assets/depo/";
 
 std::vector<std::string> getFileLines(char* path) {
 	std::ifstream file(path);
@@ -129,7 +129,8 @@ Scene* SceneParser::parseFile(char* path) {
 			if (args[j] == eParseArguments::MESH) {
 				parseMeshData* result=parseMesh(lineData[j]);
 				if (!result) continue;
-				mesh = result->mesh;				
+				mesh = result->mesh;
+				texture = result->texture;
 			}
 			else if (args[j] == eParseArguments::MODEL) {
 				model=parseModel(lineData[j]);
