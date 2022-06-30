@@ -6,12 +6,15 @@ InventoryHandler* InventoryHandler::instance = NULL;
 
 int InventoryHandler::getTotalQuantity(ePickupType type)
 {
+	std::cout << "Getting total quantities\n";
 	int out = 0;
+	
 	for (int i = 0; i < inventory.size(); ++i) {
 		if (inventory[i].type = type) {
 			out += inventory[i].quantity;
 		}
 	}
+	std::cout <<"Out " << out << std::endl;
 	return out;
 }
 
@@ -335,7 +338,11 @@ InventoryHandler::InventoryHandler() {
 	instance = this;
 	guiManager = GUImanager::instance;
 	game = Game::instance;
+	
+	inventory.clear();
+	inventory.reserve(nRow * nCol);
 	for (int i = 0; i < nCol * nRow; ++i){
+		std::cout << i << std::endl;
 		inventory.push_back(slotData(ePickupType::empty, 0, "data/assets/cube.png"));
 	}
 }

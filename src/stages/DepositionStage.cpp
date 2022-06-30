@@ -22,12 +22,14 @@ DepositionStage::DepositionStage(Scene* scene)
 }
 
 void DepositionStage::initStage() {
-	inventoryHandler = InventoryHandler::instance;
 	this->guiManager = GUImanager::instance;
 	this->stageType = eStageType::DEPO;
 	this->trackHandler = TrackHandler::instance;
 	this->trainHandler = TrainHandler::instance;
 	this->game = Game::instance;
+	this->inventoryHandler= InventoryHandler::instance;
+	std::cout << inventoryHandler->inventory.size();
+	
 
 	
 	loadAssets();
@@ -100,12 +102,18 @@ std::string generateRequiresTest(Vector2 data) {
 }
 
 bool DepositionStage::checkHasEnoughResources() {
+	std::cout << "si\n";
 	for (int i = 0; i < confirmationData.size(); ++i) {
 		auto& data = confirmationData[i];
-		if (inventoryHandler->getTotalQuantity((ePickupType)(data.x - 3)) < data.y)
+		std::cout << "DATA: " << data.x << ", " << data.y << std::endl;
+		if (inventoryHandler->getTotalQuantity((ePickupType)(data.x - 3)) < data.y) {
+			std::cout << "Has not enough\n";
 			return false;
+		}
 	}
+	std::cout << "Has enough\n";
 	return true;
+	
 }
 
 void DepositionStage::renderConfirmationMenu()

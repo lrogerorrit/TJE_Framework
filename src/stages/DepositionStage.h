@@ -27,7 +27,7 @@ class DepositionStage :
 	private:
 		TrainHandler* trainHandler = NULL;
 		TrackHandler* trackHandler = NULL;
-		InventoryHandler* inventoryHandler;
+		InventoryHandler* inventoryHandler = NULL;
 		bool upgradeGuiVisible = true;//false;
 		bool confirmGuiVisible = true;
 		GUImanager* guiManager = NULL;
