@@ -6,7 +6,7 @@ InventoryHandler* InventoryHandler::instance = NULL;
 
 int InventoryHandler::getTotalQuantity(ePickupType type)
 {
-	std::cout << "Getting total quantities\n";
+	
 	int out = 0;
 	
 	for (int i = 0; i < inventory.size(); ++i) {
@@ -14,7 +14,7 @@ int InventoryHandler::getTotalQuantity(ePickupType type)
 			out += inventory[i].quantity;
 		}
 	}
-	std::cout <<"Out " << out << std::endl;
+	
 	return out;
 }
 
@@ -144,7 +144,7 @@ void InventoryHandler::emptySlot(int slot)
 void InventoryHandler::removeAllFromInventory(ePickupType type)
 {
 	for (int i = 0; i < inventory.size(); ++i) {
-		if (inventory[i].type = type) {
+		if (inventory[i].type == type) {
 			inventory[i].quantity = 0;
 			inventory[i].tex = Texture::Get("data/assets/cube.png");
 			inventory[i].type = ePickupType::empty;

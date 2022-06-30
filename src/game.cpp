@@ -200,7 +200,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	//this->setActiveScene(returnTestScene());
 	
 	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	st->initSpaceShark();
+	//st->initSpaceShark();
 
 	
 

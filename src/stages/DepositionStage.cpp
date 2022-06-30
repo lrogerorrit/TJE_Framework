@@ -24,7 +24,7 @@ DepositionStage::DepositionStage(Scene* scene)
 void DepositionStage::initStage() {
 	this->guiManager = GUImanager::instance;
 	this->stageType = eStageType::DEPO;
-	this->trackHandler = TrackHandler::instance;
+	
 	this->trainHandler = TrainHandler::instance;
 	this->game = Game::instance;
 	this->inventoryHandler= InventoryHandler::instance;
@@ -38,8 +38,8 @@ void DepositionStage::initStage() {
 	std::vector<Vector3> positions({ Vector3(0, 0, 0), Vector3(5, 0, 2), Vector3(10, 0, 5), Vector3(12, 0, 10), Vector3(15, 0, 20), Vector3(20,0,30), Vector3(35,0,38), Vector3(40,0,45),
 		Vector3(50,0,50),Vector3(80,0,100),Vector3(120,0,150),Vector3(180,0,160),Vector3(200,0,200),Vector3(250,0,300),Vector3(400,0,350),Vector3(500,0,500)
 		});
-	BeizerCurve* curve = new BeizerCurve(positions);
-	this->trackHandler->setActiveCurve(curve);
+	
+	
 	
 	
 	
@@ -48,14 +48,14 @@ void DepositionStage::initStage() {
 
 void DepositionStage::update(double seconds_elapsed) {
 
-	trackHandler->updatePosition(seconds_elapsed);
-	trainHandler->update(seconds_elapsed);
+	
+	//trainHandler->update(seconds_elapsed);
 	Stage::update(seconds_elapsed);
 }
 
 void DepositionStage::render() {
 	
-	trackHandler->renderTrack();
+	
 	//trainHandler->render();
 	Stage::render();
 
@@ -106,6 +106,7 @@ bool DepositionStage::checkHasEnoughResources() {
 	for (int i = 0; i < confirmationData.size(); ++i) {
 		auto& data = confirmationData[i];
 		std::cout << "DATA: " << data.x << ", " << data.y << std::endl;
+		std::cout << inventoryHandler->inventory.size() << std::endl;
 		if (inventoryHandler->getTotalQuantity((ePickupType)(data.x - 3)) < data.y) {
 			std::cout << "Has not enough\n";
 			return false;

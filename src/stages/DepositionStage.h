@@ -26,10 +26,10 @@ class DepositionStage :
 {	
 	private:
 		TrainHandler* trainHandler = NULL;
-		TrackHandler* trackHandler = NULL;
+		
 		InventoryHandler* inventoryHandler = NULL;
 		bool upgradeGuiVisible = true;//false;
-		bool confirmGuiVisible = true;
+		bool confirmGuiVisible = false;
 		GUImanager* guiManager = NULL;
 		Game* game;
 		
