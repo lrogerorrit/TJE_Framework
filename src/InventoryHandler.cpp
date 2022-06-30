@@ -6,12 +6,15 @@ InventoryHandler* InventoryHandler::instance = NULL;
 
 int InventoryHandler::getTotalQuantity(ePickupType type)
 {
+	
 	int out = 0;
+	
 	for (int i = 0; i < inventory.size(); ++i) {
 		if (inventory[i].type = type) {
 			out += inventory[i].quantity;
 		}
 	}
+	
 	return out;
 }
 
@@ -112,10 +115,10 @@ int InventoryHandler::addToInventory(ePickupType type)
 	return addToInventory(type, 1);
 }
 
-void InventoryHandler::removeFromInventory(ePickupType type)
+/*void InventoryHandler::removeFromInventory(ePickupType type)
 {
 	removeFromInventory(type, 1);
-}
+}*/
 
 void InventoryHandler::removeFromSlot(int slot)
 {
@@ -141,7 +144,7 @@ void InventoryHandler::emptySlot(int slot)
 void InventoryHandler::removeAllFromInventory(ePickupType type)
 {
 	for (int i = 0; i < inventory.size(); ++i) {
-		if (inventory[i].type = type) {
+		if (inventory[i].type == type) {
 			inventory[i].quantity = 0;
 			inventory[i].tex = Texture::Get("data/assets/cube.png");
 			inventory[i].type = ePickupType::empty;
@@ -176,6 +179,12 @@ bool InventoryHandler::isEmpty()
 		}
 	}
 	return true;
+}
+
+void InventoryHandler::setOpen(bool state)
+{
+	this->isOpen = state;
+	this->guiManager->setIsGuiOpen(state);
 }
 
 void InventoryHandler::renderOptions()
@@ -216,6 +225,7 @@ void InventoryHandler::renderOptions()
 
 void InventoryHandler::render()
 {
+	if (!isOpen) return;
 	if(showSlotOptions)
 		return renderOptions();
 	Vector2 topLeft= Vector2((game->window_width/2)-200, (game->window_height/2)-125);
@@ -328,7 +338,11 @@ InventoryHandler::InventoryHandler() {
 	instance = this;
 	guiManager = GUImanager::instance;
 	game = Game::instance;
+	
+	inventory.clear();
+	inventory.reserve(nRow * nCol);
 	for (int i = 0; i < nCol * nRow; ++i){
+		std::cout << i << std::endl;
 		inventory.push_back(slotData(ePickupType::empty, 0, "data/assets/cube.png"));
 	}
 }

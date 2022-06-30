@@ -25,6 +25,8 @@ private:
 
 	int windowWidth=0;
 	int windowHeight=0;
+
+	bool isGuiOpen = false;
 	
 public:
 	
@@ -36,6 +38,9 @@ public:
 	void drawQuad(Mesh* quad, Texture* tex, Vector3 position, Vector3 scale, Vector3 rotation);
 
 	void update();
+
+	inline bool getIsGuiOpen() { return isGuiOpen; };
+	void setIsGuiOpen(bool state) { this->isGuiOpen = state; }
 
 	int doFrame(Vector2 position,Vector2 size,Vector4 color);
 	int doButton(Vector2 position,Vector2 size,Vector4 color);

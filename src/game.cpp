@@ -152,12 +152,14 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 	
 	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	new GUImanager();
+	new InventoryHandler();
+	inv = InventoryHandler::instance;
 	
 	new SoundManager();
 	new TrackHandler();
 	new CubeMap();
 	new SceneParser();
-	new GUImanager();
 	guiManager = GUImanager::instance;
 	
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
@@ -180,7 +182,6 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	player = new Player();
 
-	inv = new InventoryHandler();
 
 	inv->addToInventory(ePickupType::coal, 3);
 	inv->addToInventory(ePickupType::wood, 13);
@@ -191,7 +192,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//End coses uri																				//////////
 
-	this->setActiveStage(testStage());
+	this->setActiveStage(loadTestDepo());
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
@@ -199,7 +200,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	//this->setActiveScene(returnTestScene());
 	
 	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	st->initSpaceShark();
+	//st->initSpaceShark();
 
 	
 
@@ -271,11 +272,11 @@ void Game::render(void)
 	
 	
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
 
 
 	//Draw inventory GUI
-	if (invOpen) inv->render();
+	//if (invOpen) inv->render();
 
 	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
 
@@ -288,6 +289,7 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	
 	guiManager->update();
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
 	float playerSpeed = 5.0f * seconds_elapsed;
@@ -334,29 +336,35 @@ void Game::update(double seconds_elapsed)
 
 
 	//Coses URI
-	if (cameraLocked) {
-		SDL_ShowCursor(false);
-		player->testCollisions();
-		player->updatePlayer(seconds_elapsed);
+	if (guiManager->getIsGuiOpen())
+		cameraLocked = false;
+	else
+		cameraLocked = shouldCamBeLocked;
+	
 
-	}
-	else {
-		SDL_ShowCursor(true);
+	SDL_ShowCursor(!cameraLocked);
+	
+	
+	
+	/*
 		if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
 		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
-		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);
+		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);*/
 
-	}
+
+	player->testCollisions();
+	player->updatePlayer(seconds_elapsed);
 
 	if (Input::wasKeyPressed(SDL_SCANCODE_O))
 	{
 		cameraLocked = !cameraLocked;
+		shouldCamBeLocked = !shouldCamBeLocked;
 		Input::centerMouse();
 	};
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_I)) invOpen = !invOpen;
+	
 
 	// end Coses URI
 	
@@ -394,11 +402,11 @@ void Game::onGamepadButtonUp(SDL_JoyButtonEvent event)
 
 void Game::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
+	/*if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
 	{
 		mouse_locked = !mouse_locked;
 		SDL_ShowCursor(!mouse_locked);
-	}
+	}*/
 }
 
 void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
@@ -479,5 +487,27 @@ void Game::setActiveScene(Scene* scene)
 void Game::setActiveStage(Stage* stage)
 {
 	this->activeStage = stage;
+}
+
+void Game::moveToStageNum(int num)
+{
+	switch (num) {
+		case 0:
+		//this->setActiveStage(this->stage0); //Menu Stage
+			break;
+		case 1:
+			//this->setActiveStage(this->stage1); //Intro Stage
+			break;
+		case 2:
+			//this->setActiveStage(this->stage2); //Procedural Stage
+			break;
+		case 3:
+			//this->setActiveStage(this->stage3); //Depo Stage
+			break;
+		case 4:
+			//this->setActiveStage(this->stage4); //Death Stage
+			break;
+		
+	}
 }
 

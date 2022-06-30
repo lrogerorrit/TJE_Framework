@@ -106,7 +106,7 @@ void Player::updatePlayer(double seconds_elapsed)
 	dontDecelY = false;
 	Camera* cam = Camera::current;
 	Game* game = Game::instance;
-	if (!game->cameraLocked) return;
+	//if (!game->cameraLocked) return;
 	
 	Vector3 oldPos= playerMesh->getPosition();
 	Vector3 carPos= trainHandler->getCarPosition(0);
@@ -120,17 +120,19 @@ void Player::updatePlayer(double seconds_elapsed)
 	
 	float y_movement = -Input::mouse_delta.y * seconds_elapsed*y_sensitivity;
 	float x_movement= -Input::mouse_delta.x * seconds_elapsed*x_sensitivity;
-	pitch += y_movement;
-	pitch = clamp(pitch, -89, 89);
-	yaw += x_movement;
-	if (yaw>=360.0f)
-		yaw-=360.0f;
-	if (yaw<0.0f)
-		yaw+=360.0f;
-	
-	this->playerMesh->model.setRotation(yaw * DEG2RAD,Vector3(0,1,0));
-	this->playerMesh->model.rotate(pitch * DEG2RAD,right);
+	if(game->cameraLocked){
+		pitch += y_movement;
+		pitch = clamp(pitch, -89, 89);
+		yaw += x_movement;
+		if (yaw>=360.0f)
+			yaw-=360.0f;
+		if (yaw<0.0f)
+			yaw+=360.0f;
+	this->playerMesh->model.setRotation(yaw * DEG2RAD, Vector3(0, 1, 0));
+	this->playerMesh->model.rotate(pitch * DEG2RAD, right);
 	this->playerMesh->model.translateGlobal(oldPos.x, oldPos.y, oldPos.z);
+	
+	}
 	//this->playerMesh->rotate(y_movement,right);
 	//this->playerMesh->rotate(x_movement,top);
 	
@@ -180,32 +182,33 @@ void Player::updatePlayer(double seconds_elapsed)
 		deceleration = 1.2;//.04f;
 	}
 		
-
-	Input::centerMouse();
+	if(game->cameraLocked)
+		Input::centerMouse();
 
 	bool wasMoved = false;
-	
-	if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) {
-		wasMoved = true;
-		speedVector+= moveFront *(acceleration* seconds_elapsed);
-	}
-	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) {
-		wasMoved = true;
-		speedVector+= moveFront * (-acceleration* seconds_elapsed);
-	}
-	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) {
-		wasMoved = true;
-		speedVector+= moveRight *seconds_elapsed*acceleration;
-	}
-	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) {
-		wasMoved = true;
-		speedVector += moveRight *seconds_elapsed*(-acceleration);
-	}
-	if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && canJump) {
-		wasMoved = true;
-		speedVector = Vector3(speedVector.x, 9, speedVector.z);
-		dontDecelY = false;
-		canJump = false;
+	if (game->cameraLocked) {
+		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) {
+			wasMoved = true;
+			speedVector += moveFront * (acceleration * seconds_elapsed);
+		}
+		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) {
+			wasMoved = true;
+			speedVector += moveFront * (-acceleration * seconds_elapsed);
+		}
+		if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) {
+			wasMoved = true;
+			speedVector += moveRight * seconds_elapsed * acceleration;
+		}
+		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) {
+			wasMoved = true;
+			speedVector += moveRight * seconds_elapsed * (-acceleration);
+		}
+		if (Input::isKeyPressed(SDL_SCANCODE_SPACE) && canJump) {
+			wasMoved = true;
+			speedVector = Vector3(speedVector.x, 9, speedVector.z);
+			dontDecelY = false;
+			canJump = false;
+		}
 	}
 	
 	
