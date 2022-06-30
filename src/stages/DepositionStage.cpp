@@ -51,7 +51,9 @@ void DepositionStage::initStage() {
 void DepositionStage::update(double seconds_elapsed) {
 
 	if (!getIsUpgradeGuiVisible()) {
-		;
+		guiManager->setIsGuiOpen(false);
+		Input::centerMouse();
+		
 		if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
 			gameInstance->moveToStageNum(2);
 		}
@@ -68,7 +70,6 @@ void DepositionStage::update(double seconds_elapsed) {
 		//trainHandler->update(seconds_elapsed);
 //		player->testCollisions();
 		player->updatePlayerDepo(seconds_elapsed);
-
 		
 	}
 	SDL_ShowCursor(true);
@@ -148,6 +149,7 @@ bool DepositionStage::checkHasEnoughResources() {
 void DepositionStage::renderConfirmationMenu()
 {
 	if (!confirmGuiVisible) return;
+	guiManager->setIsGuiOpen(true);
 	Vector2 screenCenter = Vector2(game->window_width / 2, game->window_height / 2);
 	guiManager->doFrame(screenCenter, Vector2(400, 500), Vector4(.2, .2, .2, 1));
 	guiManager->doText(Vector2(screenCenter.x - 135, screenCenter.y - 240), "Attention", 6);
@@ -211,7 +213,7 @@ void DepositionStage::renderConfirmationMenu()
 void DepositionStage::renderUpgradeMenu()
 {
 	if (!upgradeGuiVisible || confirmGuiVisible) return;
-	SDL_ShowCursor(true);
+	guiManager->setIsGuiOpen(true);
 	Vector2 screenCenter = Vector2(game->window_width / 2, game->window_height / 2);
 	guiManager->doFrame(screenCenter, Vector2(400, 500), Vector4(.2, .2, .2, 1));
 	guiManager->doText(Vector2(screenCenter.x - 125, screenCenter.y - 240), "Upgrades", 6);
@@ -261,7 +263,7 @@ void DepositionStage::renderUpgradeMenu()
 void DepositionStage::setIsUpgradeGuiVisible(bool state)
 {
 	this->upgradeGuiVisible = state;
-	guiManager->setIsGuiOpen(state);
+	
 }
 
 

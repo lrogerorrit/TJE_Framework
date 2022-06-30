@@ -375,7 +375,7 @@ void Game::update(double seconds_elapsed)
 		cameraLocked = shouldCamBeLocked;
 	
 
-	//SDL_ShowCursor(!cameraLocked && !guiManager->getIsGuiOpen());
+	SDL_ShowCursor(!cameraLocked && guiManager->getIsGuiOpen());
 	
 	
 	
