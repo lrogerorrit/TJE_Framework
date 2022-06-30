@@ -170,8 +170,11 @@ void SpaceShark::updateForObstacles(double deltaTime) {
 void SpaceShark::scareShark(Vector3 pos) {
 	Vector3 sharkPos = this->meshEntity->getPosition();
 	float dist = sharkPos.distance(pos);
-	float invDist = clamp(this->maxScareDistance - dist, 0, this->maxScareDistance);
-	this->scareLevels += SCARE_CONSTANT * invDist;
+	/*float invDist = clamp(this->maxScareDistance - dist, 0, this->maxScareDistance);
+	this->scareLevels += SCARE_CONSTANT * invDist;*/
+	//if (dist < this->maxScareDistance) {
+	this->scareLevels = 100;
+	//}
 }
 
 void SpaceShark::updateAttack(double deltaTime)
@@ -180,14 +183,17 @@ void SpaceShark::updateAttack(double deltaTime)
 
 	
 	navigateToTrain(deltaTime);
-	if (this->scareLevels > 100) {
+	std::cout << this->scareLevels<<std::endl;
+	if (this->scareLevels >= 100) {
 		this->scareLevels = 0;
 		this->attackCount = 0;
 		this->setState(eSharkState::RETREAT);
+		return;
 	}
 	else if (this->train_separation<=attackDamageDistance) {
 		std::cout << "Attack count " << this->attackCount << std::endl;
 		//TODO: Remove health from train
+		trainHandler->damageTrain(10);
 		if (this->attackCount >= this->maxAttackTimes) {
 			this->attackCount = 0;
 			this->scareLevels = 0;

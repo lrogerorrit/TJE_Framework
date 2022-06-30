@@ -3,11 +3,16 @@
 #include "curves.h"
 
 class BoundingBox;
+class Scene;
+
+class GUImanager;
+
 
 
 struct trainCarData {
 	Entity* entity;
 	MeshEntity* trainMesh;
+	MeshEntity* hornMesh;
 	int carIndex;
 	double curvePos;
 	int segment;
@@ -23,9 +28,11 @@ private:
 	int numCars = 0;
 	double frontCarPos = 0.0;
 	BeizerCurve* activeCurve=NULL;
-	double speed = .1;
+	double speed = .03;
 	bool collidedWithPlayer = false;
-
+	GUImanager* guiManager=NULL;
+	int health = 100;
+	int maxHealth = 100;
 	
 	
 public:
@@ -47,17 +54,26 @@ public:
 	
 	std::vector<Matrix44> getTrainDirPos();
 	
+	void damageTrain(int damage);
+	void fixTrain();
+	void addToMaxHealth(int quantity);
+	int getHealth();
+	int getMaxHealth();
+	
+	
+	
 	
 	void setSpeed(double speed);
 	double getSpeed();
 	
 	void update(double dt);
-	void render();
+	
 
 	trainCarData getCarData(int carNum);
 
 	bool getCollidedWithPlayer();
 
+	void renderHealth();
 	
 
 	

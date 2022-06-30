@@ -9,8 +9,10 @@ BeizerCurve::BeizerCurve(std::vector<Vector3>& points, float increments, bool ca
 	this->numPoints = points.size()-1;
 	this->calculateArcLength(1000);
 	//calculate cached segments
-	if (cacheAtStart)
+	if (cacheAtStart) {
 		this->calculateUniformSegments(150);
+		this->cacheSegments(1.0 / 150.0);
+	}
 		//this->cacheSegments(increments);
 }
 
@@ -155,9 +157,18 @@ Vector3 BeizerCurve::getSegmentDirection(int i)
 	
 }
 
+float BeizerCurve::getSegmentDistance(int i)
+{
+	return this->segmentDistances[i];
+	//return this->segmentArray[i].distance;
+	float dist = (this->segmentArray[i].position.distance(this->segmentArray[i + 1].position));
+	std::cout << "segment " << i << " dist is " << dist << std::endl;
+	return dist;
+}
+
 int BeizerCurve::getSegmentFromMu(float mu)
 {
-	if (mu == 0) return 0;
+	/*if (mu == 0) return 0;
 	else if (mu == 1) return this->numSegments;
 	for(int i=0;i<this->numSegments-1;++i){
 		auto &data = this->segmentArray[i];
@@ -167,6 +178,9 @@ int BeizerCurve::getSegmentFromMu(float mu)
 
 		
 		
-	}
+	}*/
+	float segmentSize = 1.0f / (float)numSegments;
+	int segment = (int)floor(mu / segmentSize);
+	return segment;
 }
 

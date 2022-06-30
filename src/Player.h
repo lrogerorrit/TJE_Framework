@@ -19,6 +19,7 @@ private:
 
 
 public:
+	static Player* instance;
 	MeshEntity* playerMesh;
 	float yaw = 0.0f;
 	float pitch = 0.0f;
@@ -42,7 +43,13 @@ public:
 	void updatePlayer(double seconds_elapsed);
 	void applyMovementForce(eDirection direction,double seconds_elapsed);
 	bool testCollisions();
+
 	void updatePlayerDepo(double seconds_elapsed);
+
+	inline Vector3 getPosition() {
+		return this->position;
+	};
+
 	
 };
 

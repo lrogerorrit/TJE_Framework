@@ -58,9 +58,7 @@ class BeizerCurve
 
 		Vector3 getSegmentDirection(int i);
 
-		inline float getSegmentDistance(int i) {
-			return this->segmentArray[i].distance;
-		}
+		float getSegmentDistance(int i);
 		
 		int getSegmentFromMu(float mu);
 	

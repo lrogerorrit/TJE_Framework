@@ -1,5 +1,9 @@
 #include "TrainHandler.h"
 #include "mesh.h"
+#include "stages/StagesInclude.h"
+#include "Scene.h"
+#include "GUImanager.h"
+#include "game.h"
 
 
 TrainHandler* TrainHandler::instance = NULL;
@@ -7,12 +11,14 @@ TrainHandler* TrainHandler::instance = NULL;
 TrainHandler::TrainHandler()
 {
 	instance = this;
+	guiManager = GUImanager::instance;
 }
 
 TrainHandler::TrainHandler(BeizerCurve* curve)
 {
 	this->activeCurve = curve;
 	instance = this;
+	guiManager = GUImanager::instance;
 }
 
 void TrainHandler::setActiveCurve(BeizerCurve* curve)
@@ -22,14 +28,21 @@ void TrainHandler::setActiveCurve(BeizerCurve* curve)
 
 void TrainHandler::addCar(Entity* entity,MeshEntity* trainEntity)
 {
+	Mesh* hornMesh = Mesh::Get("data/assets/train/horn.obj");
+	Texture* hornTexture = Texture::Get("data/assets/train/horn.png");
+	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	trainCarData data;
 	data.entity = entity;
 	data.carIndex = this->numCars;
 	data.segment = 0; //TODO: get segment from front position
 	data.curvePos = 0;
 	data.trainMesh = trainEntity;
-
+	data.hornMesh = new MeshEntity(hornMesh, hornTexture, shader);
+	data.hornMesh->setPosition(Vector3(0, .8, -1.65));
+	data.hornMesh->setCheckAngle(false);
 	this->trainCarArray.push_back(data);
+	data.hornMesh->ingoreCollision = true;
+	data.trainMesh->addChild(data.hornMesh);
 
 	this->numCars++;
 }
@@ -71,6 +84,30 @@ std::vector<Matrix44> TrainHandler::getTrainDirPos()
 	return toReturn;
 }
 
+void TrainHandler::damageTrain(int damage)
+{
+	this->health = clamp(this->health - damage, 0, 100);
+}
+
+void TrainHandler::fixTrain()
+{
+	this->health = 100;
+}
+
+void TrainHandler::addToMaxHealth(int quantity)
+{
+	this->maxHealth += quantity;
+}
+
+int TrainHandler::getHealth()
+{
+	return health;
+}
+int TrainHandler::getMaxHealth()
+{
+	return maxHealth;
+}
+
 void TrainHandler::setSpeed(double speed)
 {
 	this->speed = speed;
@@ -90,8 +127,10 @@ void TrainHandler::update(double dt)
 		trainCarData& data= this->trainCarArray[i];
 		
 		Vector3 oldPos= data.entity->getPosition();
+		
 		if (data.curvePos >= 1.0) data.curvePos = 0;
 		data.curvePos += dt*this->speed * (1 / activeCurve->getSegmentDistance(data.segment));
+		
 		data.segment = activeCurve->getSegmentFromMu(data.curvePos);
 		data.entity->setPosition(activeCurve->getPosition(data.curvePos));
 		Matrix44 rotMatrix= activeCurve->getRotationMatrix(data.curvePos);
@@ -118,14 +157,9 @@ void TrainHandler::update(double dt)
 	
 }
 
-void TrainHandler::render()
-{
-	for (int i = 0; i < this->trainCarArray.size(); i++)
-	{
-		trainCarData& data= this->trainCarArray[i];
-		//data.trainMesh->render();
-	}
-}
+
+
+
 
 trainCarData TrainHandler::getCarData(int carNum)
 {
@@ -135,6 +169,14 @@ trainCarData TrainHandler::getCarData(int carNum)
 bool TrainHandler::getCollidedWithPlayer()
 {
 	return this->collidedWithPlayer;
+}
+
+void TrainHandler::renderHealth()
+{
+	int windowWidth = Game::instance->window_width;
+	Vector2 pos = Vector2(windowWidth * .6, 5);
+	std::string text= "Train Health: " + std::to_string(this->health);
+	guiManager->doText(pos, text, 3);
 }
 
 

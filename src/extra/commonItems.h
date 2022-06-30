@@ -16,3 +16,10 @@ enum class eStageType {
 	PROCEDURAL_WORLD,
 	DEPO,
 };
+
+enum ePickupType {
+	empty,
+	wood,
+	gold,
+	coal
+};

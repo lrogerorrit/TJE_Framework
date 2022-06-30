@@ -95,6 +95,18 @@
     <ClCompile Include="..\..\src\stages\DepositionStage.cpp">
       <Filter>stages</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\InventoryHandler.cpp" />
+    <ClCompile Include="..\..\src\GUImanager.cpp" />
+    <ClCompile Include="..\..\src\itemChest.cpp" />
+    <ClCompile Include="..\..\src\extra\Audio.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\extra\SoundManager.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stages\MenuStage.cpp">
+      <Filter>stages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -194,6 +206,18 @@
       <Filter>extra</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\stages\DepositionStage.h">
+      <Filter>stages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\InventoryHandler.h" />
+    <ClInclude Include="..\..\src\GUImanager.h" />
+    <ClInclude Include="..\..\src\itemChest.h" />
+    <ClInclude Include="..\..\src\extra\Audio.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\extra\SoundManager.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stages\MenuStage.h">
       <Filter>stages</Filter>
     </ClInclude>
   </ItemGroup>

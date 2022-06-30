@@ -19,7 +19,11 @@
 #include "extra/SceneParser.h"
 #include "stages/DepositionStage.h"
 #include "SpaceShark.h"
+#include <bass.h>
 #include <time.h> 
+#include "InventoryHandler.h"
+#include"GUImanager.h"
+#include "extra/SoundManager.h"
 
 
 
@@ -45,11 +49,14 @@ float trackPos = 0;
 MeshEntity* ground;
 MeshEntity* playerMesh;
 
+DepositionStage* depoStage = NULL;
+ProceduralWorldStage* proceduralStage = NULL;
 
 Player* player= NULL;
 
 
-
+InventoryHandler* inv = NULL;
+bool invOpen = false;
 
 //end coses uri
 Game* Game::instance = NULL;
@@ -63,12 +70,12 @@ Scene* returnTestScene() {
 	
 	MeshEntity* testMeshEntity = new MeshEntity(mesh,low_poly_mesh, texture, shader);
 	testMeshEntity->modifyScale(.5);
-	baseEntity->addChild(testMeshEntity);
+	//baseEntity->addChild(testMeshEntity);
 	testMeshEntity->model.translateGlobal(10, 30, 10);
 	
 	
 	
-	glPointSize(2);
+	//glPointSize(2);
 
 	
 	return testScene;
@@ -76,7 +83,7 @@ Scene* returnTestScene() {
 
 ProceduralWorldStage* testStage() {
 	ProceduralWorldStage* stage = new ProceduralWorldStage(returnTestScene(),trainHandler);
-
+	
 	return stage;
 }
 
@@ -95,7 +102,8 @@ void loadTestCar(Game* game) {
 	//trolleyEntity->ingoreCollision = true;
 	trolleyEntity->setCollisionMesh(Mesh::Get("data/assets/train/collisionMesh.obj"));
 	positionEntity->addChild(trolleyEntity);
-	//stage->getScene()->getRoot()->addChild(positionEntity);
+	
+	stage->getScene()->getRoot()->addChild(positionEntity);
 	positionEntity->forceCheckChilds = true;
 	trainHandler->addCar(positionEntity,trolleyEntity);
 	trolleyEntity->maxRenderDist = 10000000000000;
@@ -110,8 +118,23 @@ DepositionStage* loadTestDepo() {
 	return stage;
 }
 
+void loadStages() {
+	depoStage = loadTestDepo();
+	proceduralStage = testStage();
+}
+
 Game::Game(int window_width, int window_height, SDL_Window* window)
 {
+	prevMouseState.reserve(3);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	prevMouseState.push_back(false);
+	mouseState.reserve(3);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	mouseState.push_back(false);
+	
+	
 	this->window_width = window_width;
 	this->window_height = window_height;
 	this->window = window;
@@ -136,9 +159,16 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	camera->setPerspective(70.f,window_width/(float)window_height,0.1f,10000.f); //set the projection, we want to be perspective
 	
 	shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	new GUImanager();
+	new InventoryHandler();
+	inv = InventoryHandler::instance;
+	
+	new SoundManager();
 	new TrackHandler();
 	new CubeMap();
 	new SceneParser();
+	guiManager = GUImanager::instance;
+	
 	//load one texture without using the Texture Manager (Texture::Get would use the manager)
 	texture = new Texture();
  	texture->load("data/texture.tga");
@@ -160,11 +190,21 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	player = new Player();
 
 
+	inv->addToInventory(ePickupType::coal, 3);
+	inv->addToInventory(ePickupType::wood, 13);
+	
+	
+	inv->addToInventory(ePickupType::wood, 1);
+	inv->addToInventory(ePickupType::gold, 1);
+	inv->addToInventory(ePickupType::coal, 1);
+
 	
 	//End coses uri																				//////////
-
 	
+	loadStages();
 
+
+	this->setActiveStage(proceduralStage);
 
 
 	loadTestCar(this);
@@ -173,7 +213,10 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	//this->setActiveScene(returnTestScene());
 	
 	//ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	//st->initSpaceShark();
+	proceduralStage->initSpaceShark();
+
+	
+
 	
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
@@ -200,6 +243,7 @@ void Game::render(void)
 	Matrix44 m;
 	m.rotate(angle*DEG2RAD, Vector3(0, 1, 0));
 
+	
 
 
 	/*if (shader)
@@ -239,9 +283,15 @@ void Game::render(void)
 	this->activeStage->render();
 	player->renderPlayer();
 	
-
+	
 	//Draw the floor grid
-	drawGrid();
+	//drawGrid();
+
+
+	//Draw inventory GUI
+	//if (invOpen) inv->render();
+
+	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
 
 	//render the FPS, Draw Calls, etc
 	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
@@ -252,8 +302,9 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	
+	guiManager->update();
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
-
 	float playerSpeed = 5.0f * seconds_elapsed;
 	float rotSpeed = 10.0f * seconds_elapsed;
 	//example
@@ -262,6 +313,9 @@ void Game::update(double seconds_elapsed)
 	//this->activeScene->update(seconds_elapsed);
 	this->activeStage->update(seconds_elapsed);
 	
+	
+	
+	
 	//mouse input to rotate the cam
 	if ((Input::mouse_state & SDL_BUTTON_LEFT) || mouse_locked ) //is left button pressed?
 	{
@@ -269,6 +323,15 @@ void Game::update(double seconds_elapsed)
 		camera->rotate(Input::mouse_delta.y * 0.005f, camera->getLocalVector( Vector3(-1.0f,0.0f,0.0f)));
 	}
 
+	for (int i = 0; i < 3; ++i) {
+		prevMouseState[i] = (bool) mouseState[i];
+		
+	}
+	mouseState[0] = Input::mouse_state & SDL_BUTTON_LEFT;
+	mouseState[1] = Input::mouse_state & SDL_BUTTON_MIDDLE;
+	mouseState[2] = Input::mouse_state & SDL_BUTTON_RIGHT;
+		
+	
 	/*
 	if (playTrack) {
 		//add constant speed taking into count size of segment
@@ -286,6 +349,8 @@ void Game::update(double seconds_elapsed)
 
 
 	//Coses URI
+
+/*
 	if (cameraLocked) {
 		SDL_ShowCursor(false);
 		if (isdepo) {
@@ -298,18 +363,34 @@ void Game::update(double seconds_elapsed)
 		}
 	}
 	else {
-		SDL_ShowCursor(true);
+		SDL_ShowCursor(true);*/
+
+	if (guiManager->getIsGuiOpen())
+		cameraLocked = false;
+	else
+		cameraLocked = shouldCamBeLocked;
+	
+
+	SDL_ShowCursor(!cameraLocked);
+	
+	
+	
+	/*
+
 		if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
 		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) camera->move(Vector3(1.0f, 0.0f, 0.0f) * speed);
-		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);
+		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);*/
 
-	}
+
+	player->testCollisions();
+	player->updatePlayer(seconds_elapsed);
 
 	if (Input::wasKeyPressed(SDL_SCANCODE_O))
 	{
 		cameraLocked = !cameraLocked;
+		shouldCamBeLocked = !shouldCamBeLocked;
 		Input::centerMouse();
 	};
 
@@ -351,11 +432,11 @@ void Game::onGamepadButtonUp(SDL_JoyButtonEvent event)
 
 void Game::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
+	/*if (event.button == SDL_BUTTON_MIDDLE) //middle mouse
 	{
 		mouse_locked = !mouse_locked;
 		SDL_ShowCursor(!mouse_locked);
-	}
+	}*/
 }
 
 void Game::onMouseButtonUp(SDL_MouseButtonEvent event)
@@ -376,6 +457,53 @@ void Game::onResize(int width, int height)
 	window_height = height;
 }
 
+bool Game::isKeyPressed(SDL_Keycode key)
+{
+	return Input::isKeyPressed(key);
+}
+
+bool Game::wasKeyPressed(SDL_Keycode key)
+{
+	return Input::wasKeyPressed(key);
+}
+
+Vector2 Game::getMousePosition()
+{
+	return Input::mouse_position;
+}
+
+bool Game::isLeftMouseDown()
+{
+	return Input::isMousePressed(1);
+}
+
+bool Game::isRightMouseDown()
+{
+	return Input::isMousePressed(3);
+}
+
+bool Game::isMiddleMouseDown()
+{
+	return Input::isMousePressed(2);
+}
+
+bool Game::wasLeftMouseDown()
+{
+	bool state= this->mouseState[0]==1 && this->prevMouseState[0]==0;
+	
+	return state;
+}
+
+bool Game::wasRightMouseDown()
+{
+	return this->mouseState[2] && !this->prevMouseState[2];
+}
+
+bool Game::wasMiddleMouseDown()
+{
+	return this->mouseState[1] && !this->prevMouseState[1];
+}
+
 void Game::addToDestroyQueue(Entity* ent)
 {
 	this->destroyQueue.push_back(ent);
@@ -389,5 +517,27 @@ void Game::setActiveScene(Scene* scene)
 void Game::setActiveStage(Stage* stage)
 {
 	this->activeStage = stage;
+}
+
+void Game::moveToStageNum(int num)
+{
+	switch (num) {
+		case 0:
+		//this->setActiveStage(this->stage0); //Menu Stage
+			break;
+		case 1:
+			//this->setActiveStage(this->stage1); //Intro Stage
+			break;
+		case 2:
+			this->setActiveStage(proceduralStage); //Procedural Stage
+			break;
+		case 3:
+			this->setActiveStage(depoStage); //Depo Stage
+			break;
+		case 4:
+			//this->setActiveStage(this->stage4); //Death Stage
+			break;
+		
+	}
 }
 
