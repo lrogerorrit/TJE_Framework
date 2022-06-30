@@ -34,6 +34,8 @@ class DepositionStage :
 		GUImanager* guiManager = NULL;
 		Game* game;
 		
+		bool showScreenText = false;
+
 		std::vector<Vector2> confirmationData;
 		
 		Vector4 buttonState = Vector4(0, 0, 0,0);
@@ -53,6 +55,7 @@ class DepositionStage :
 
 
 		void update(double deltaTime);
+		void renderUI();
 		void render();
 		void renderConfirmationMenu();
 		void renderUpgradeMenu();

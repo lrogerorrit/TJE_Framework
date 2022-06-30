@@ -57,18 +57,27 @@ void DepositionStage::update(double seconds_elapsed) {
 		}
 
 		if (this->player->position.distance(Vector3(5, 13, -15)) < 5) {
-			this->guiManager->doText(Vector2(gameInstance->window_width * .5, 4), "E - Open Upgrade Menu", 3);
+			this->showScreenText = true;
+			
 			if (Input::wasKeyPressed(SDL_SCANCODE_E)) {
 				this->setIsUpgradeGuiVisible(true);
 			}
 		}
+		else
+			this->showScreenText = false;
 		//trainHandler->update(seconds_elapsed);
 //		player->testCollisions();
 		player->updatePlayerDepo(seconds_elapsed);
-		Stage::update(seconds_elapsed);
 
-		std::cout<<player->position.x<<" "<<player->position.y<<" "<<player->position.z<<"\r";
+		
 	}
+	SDL_ShowCursor(true);
+	Stage::update(seconds_elapsed);
+}
+
+void DepositionStage::renderUI() {
+	if(this->showScreenText)
+		this->guiManager->doText(Vector2(gameInstance->window_width * .5, 4), "E - Open Upgrade Menu", 3);
 }
 
 void DepositionStage::render() {
@@ -78,6 +87,7 @@ void DepositionStage::render() {
 	Stage::render();
 
 	//Render ui:
+	renderUI();
 	this->renderUpgradeMenu();
 	renderConfirmationMenu();
 	
@@ -201,6 +211,7 @@ void DepositionStage::renderConfirmationMenu()
 void DepositionStage::renderUpgradeMenu()
 {
 	if (!upgradeGuiVisible || confirmGuiVisible) return;
+	SDL_ShowCursor(true);
 	Vector2 screenCenter = Vector2(game->window_width / 2, game->window_height / 2);
 	guiManager->doFrame(screenCenter, Vector2(400, 500), Vector4(.2, .2, .2, 1));
 	guiManager->doText(Vector2(screenCenter.x - 125, screenCenter.y - 240), "Upgrades", 6);
@@ -250,6 +261,7 @@ void DepositionStage::renderUpgradeMenu()
 void DepositionStage::setIsUpgradeGuiVisible(bool state)
 {
 	this->upgradeGuiVisible = state;
+	guiManager->setIsGuiOpen(state);
 }
 
 
