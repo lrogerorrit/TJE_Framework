@@ -48,14 +48,11 @@ int InventoryHandler::addToInventory(ePickupType type, int quantity)
 				case ePickupType::coal:
 					inventory[i].tex = Texture::Get("data/inventory/coal.png");
 					break;
-				case ePickupType::iron:
+				case ePickupType::gold:
 					inventory[i].tex = Texture::Get("data/inventory/iron.png");
 					break;
 				case ePickupType::wood:
 					inventory[i].tex = Texture::Get("data/inventory/wood.png");
-					break;
-				case ePickupType::stone:
-					inventory[i].tex = Texture::Get("data/inventory/rock.jpg");
 					break;
 				}
 			}
@@ -72,14 +69,11 @@ int InventoryHandler::addToInventory(ePickupType type, int quantity)
 				case ePickupType::coal:
 					inventory[i].tex = Texture::Get("data/inventory/coal.png");
 					break;
-				case ePickupType::iron:
+				case ePickupType::gold:
 					inventory[i].tex = Texture::Get("data/inventory/iron.png");
 					break;
 				case ePickupType::wood:
 					inventory[i].tex = Texture::Get("data/inventory/wood.png");
-					break;
-				case ePickupType::stone:
-					inventory[i].tex = Texture::Get("data/inventory/rock.jpg");
 					break;
 				}
 				return 0;

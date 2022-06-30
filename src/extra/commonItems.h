@@ -20,7 +20,6 @@ enum class eStageType {
 enum ePickupType {
 	empty,
 	wood,
-	iron,
-	stone,
+	gold,
 	coal
 };

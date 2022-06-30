@@ -18,28 +18,33 @@ void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock3.obj");
 	Mesh::Get("data/assets/rocks/rock4.obj");
 	Mesh::Get("data/assets/pickables/plank.obj");
+	Mesh::Get("data/assets/pickables/GoldBar.obj");
+	Mesh::Get("data/assets/pickables/coal.obj");
+	
 }
 
 void ProceduralWorldStage::generateProceduralScenery()
 {
 	Vector4 defaultCol = Vector4(1, 1, 1, 1);
-	float scales[5] = { .5,.5,.5,.5,10 }; //{ .5,.5, .5,30 };
-	float chances[5] = { 10,10,10,10,9 }; //{ .5,.5, .5,30 };
-	float separation[5] = { 3,3,3,3,5 };
-	Vector4 colors[5] = { defaultCol,defaultCol,defaultCol,defaultCol,Vector4(0.63,.49,0,1) };
-	bool useRockShader[5] = { true,true,true,true,false };
+	float scales[7] = { .5,.5,.5,.5,10,.5,10 }; //{ .5,.5, .5,30 };
+	float chances[7] = { 10,10,10,10,9,7,6 }; //{ .5,.5, .5,30 };
+	float separation[7] = { 3,3,3,3,5,6,7 };
+	Vector4 colors[7] = { defaultCol,defaultCol,defaultCol,defaultCol,Vector4(0.63,.49,0,1),Vector4(1,.77,.08,1),Vector4(.2,.2,.2,1)};
+	bool useRockShader[7] = { true,true,true,true,false,true,true };
 	BeizerCurve* trackCurve = this->trackHandler->getActiveCurve();
 	this->player = Player::instance;
 	if (trackCurve == nullptr) return;
 	
 	float maxDistance = 10.0f;
 	
-	for (int ii=0; ii<5;++ii){
+	for (int ii=0; ii<7;++ii){
+		
 		eSceneryType scType = (eSceneryType)ii;
 		std::vector<Vector3> positions;
 		float len = trackCurve->arcLength;
-		if (randomIntRange(0, 10) > chances[ii])continue;
 		for (int i = 0; i <= trackCurve->segmentArray.size(); i+=separation[ii]) {
+			if (randomIntRange(0, 10) > chances[ii])continue;
+			if (i >= trackCurve->segmentArray.size()) continue;
 			segmentData& data= trackCurve->segmentArray[i];
 			Matrix44 mat = Matrix44::IDENTITY;
 			Vector3 pos = data.position;
@@ -79,7 +84,9 @@ void ProceduralWorldStage::generateProceduralScenery()
 		data.scenery->setColor(colors[ii]);
 		this->scenery.push_back(data);
 		data.scenery->groupScale(scales[ii]);
-		//this->scene->getRoot()->addChild(data.scenery);
+		if (ii > 3)
+			data.scenery->ingoreCollision = true;
+		this->scene->getRoot()->addChild(data.scenery);
 	}
 	
 	
@@ -93,8 +100,7 @@ void ProceduralWorldStage::renderScenery()
 {
 	
 	for (auto& sceneryEntity : this->scenery) {
-		if ((int)sceneryEntity.type < 4) continue;
-		sceneryEntity.scenery->render();
+		//sceneryEntity.scenery->render();
 		
 	}
 	
@@ -150,12 +156,12 @@ bool ProceduralWorldStage::isPlayerNearResource() {
 
 Vector4 ProceduralWorldStage::getNearResource() { //(x,y,z,type)
 	
-	for (int i = 4; i < max_scenery_types; ++i) {
-		auto& data = this->scenery[i];
+	for (int i = 0; i < 3; ++i) {
+		auto& data = this->scenery[i+4];
 		for (int y = 0; y < data.positions.size(); ++y) {
 			Vector3 pos= data.positions[y];
 			if (pos.distance(player->getPosition()) < 10) {
-				return Vector4(pos,i);
+				return Vector4(pos,i+4);
 			}
 		}
 	}
@@ -263,7 +269,7 @@ sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool
 	}
 	this->type = type;
 	//TODO: Load Mesh and texture from data
-	Mesh* mesh;
+	Mesh* mesh = nullptr;
 	switch (type)
 	{
 		case eSceneryType::ROCK1:
@@ -280,6 +286,12 @@ sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool
 			break;
 		case eSceneryType::PLANK:
 			mesh = Mesh::Get("data/assets/pickables/plank.obj");
+			break;
+		case eSceneryType::GOLD:
+			mesh = Mesh::Get("data/assets/pickables/GoldBar.obj");
+			break;
+		case eSceneryType::COAL:
+			mesh = Mesh::Get("data/assets/pickables/coal.obj");
 			break;
 				
 					

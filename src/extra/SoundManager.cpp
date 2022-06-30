@@ -30,6 +30,7 @@ SoundManager::SoundManager()
 Audio* SoundManager::loadAudio(const char* fileName)
 {
 	loadedAudios[fileName] = new Audio(fileName);
+	return loadedAudios[fileName];
 }
 
 

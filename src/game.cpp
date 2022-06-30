@@ -49,6 +49,8 @@ float trackPos = 0;
 MeshEntity* ground;
 MeshEntity* playerMesh;
 
+DepositionStage* depoStage = NULL;
+ProceduralWorldStage* proceduralStage = NULL;
 
 Player* player= NULL;
 
@@ -73,7 +75,7 @@ Scene* returnTestScene() {
 	
 	
 	
-	glPointSize(2);
+	//glPointSize(2);
 
 	
 	return testScene;
@@ -114,6 +116,11 @@ DepositionStage* loadTestDepo() {
 	Scene* sc= parser->parseFile("data/export.scene");
 	DepositionStage* stage = new DepositionStage(sc);
 	return stage;
+}
+
+void loadStages() {
+	depoStage = loadTestDepo();
+	proceduralStage = testStage();
 }
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
@@ -185,22 +192,26 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 	inv->addToInventory(ePickupType::coal, 3);
 	inv->addToInventory(ePickupType::wood, 13);
-	inv->addToInventory(ePickupType::iron, 1);
-	inv->addToInventory(ePickupType::stone, 3);
+	
+	
 	inv->addToInventory(ePickupType::wood, 1);
-	inv->addToInventory(ePickupType::iron, 14);
+	inv->addToInventory(ePickupType::gold, 1);
+	inv->addToInventory(ePickupType::coal, 1);
+
 	
 	//End coses uri																				//////////
+	
+	loadStages();
 
-	this->setActiveStage(loadTestDepo());
+	this->setActiveStage(proceduralStage);
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
 	
 	//this->setActiveScene(returnTestScene());
 	
-	ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
-	//st->initSpaceShark();
+	//ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
+	proceduralStage->initSpaceShark();
 
 	
 

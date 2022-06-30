@@ -34,6 +34,7 @@ private:
 
 	bool canAttack = false;
 	bool inBackstage = false;
+	bool isInit = false;
 	
 	bool rightSide = true;
 	float train_separation = 60.0f;
@@ -107,7 +108,8 @@ public:
 	static SpaceShark* instance;
 	SpaceShark();
 	
-
+	bool getIsInit() { return isInit; }
+	void setIsInit(bool val) { isInit = val; }
 	void Update(double deltaTime);
 	void Render();
 	void setState(eSharkState state);

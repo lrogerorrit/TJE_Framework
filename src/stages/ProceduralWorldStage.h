@@ -23,8 +23,8 @@ enum class eSceneryType {
 	ROCK3,
 	ROCK4,
 	PLANK,
-	//ROCK,
-	//METAL
+	GOLD,
+	COAL
 	
 	
 };
@@ -33,7 +33,7 @@ struct sceneryData {
 	GroupEntity* scenery;
 	eSceneryType type;
 	std::vector<Vector3> positions;
-	SoundManager* soundManager;
+	
 	sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool useRockShader=true);
 	
 };
@@ -53,7 +53,7 @@ class ProceduralWorldStage :
 		std::vector<sceneryData> scenery;
 		CubeMap* cubeMap = NULL;
 		
-		const int max_scenery_types = 5;
+		const int max_scenery_types = 7;
 
 		void loadAssets();
 
