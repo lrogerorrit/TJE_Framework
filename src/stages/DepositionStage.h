@@ -10,6 +10,7 @@ class TrackHandler;
 class GUImanager;
 class Game;
 class InventoryHandler;
+class Player;
 
 
 enum class eBlockType {
@@ -26,9 +27,9 @@ class DepositionStage :
 {	
 	private:
 		TrainHandler* trainHandler = NULL;
-		
+		Player* player;
 		InventoryHandler* inventoryHandler = NULL;
-		bool upgradeGuiVisible = true;//false;
+		bool upgradeGuiVisible = false;//false;
 		bool confirmGuiVisible = false;
 		GUImanager* guiManager = NULL;
 		Game* game;

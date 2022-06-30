@@ -510,10 +510,10 @@ void Game::moveToStageNum(int num)
 			//this->setActiveStage(this->stage1); //Intro Stage
 			break;
 		case 2:
-			//this->setActiveStage(this->stage2); //Procedural Stage
+			this->setActiveStage(proceduralStage); //Procedural Stage
 			break;
 		case 3:
-			//this->setActiveStage(this->stage3); //Depo Stage
+			this->setActiveStage(depoStage); //Depo Stage
 			break;
 		case 4:
 			//this->setActiveStage(this->stage4); //Death Stage

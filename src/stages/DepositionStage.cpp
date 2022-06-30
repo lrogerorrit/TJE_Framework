@@ -7,6 +7,7 @@
 #include "../TrainHandler.h"
 #include "../GUImanager.h"
 #include "../InventoryHandler.h"
+#include "../input.h"
 
 
 
@@ -24,6 +25,7 @@ DepositionStage::DepositionStage(Scene* scene)
 void DepositionStage::initStage() {
 	this->guiManager = GUImanager::instance;
 	this->stageType = eStageType::DEPO;
+	this->player = Player::instance;
 	
 	this->trainHandler = TrainHandler::instance;
 	this->game = Game::instance;
@@ -48,9 +50,21 @@ void DepositionStage::initStage() {
 
 void DepositionStage::update(double seconds_elapsed) {
 
-	
-	//trainHandler->update(seconds_elapsed);
-	Stage::update(seconds_elapsed);
+	if (getIsUpgradeGuiVisible()) {
+		;
+		if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
+			gameInstance->moveToStageNum(2);
+		}
+
+		if (this->player->position.distance(Vector3(5, 13, -15)) < 5) {
+			this->guiManager->doText(Vector2(gameInstance->window_width * .5, 4), "E - Open Upgrade Menu", 3);
+			if (Input::wasKeyPressed(SDL_SCANCODE_E)) {
+				this->setIsUpgradeGuiVisible(true);
+			}
+		}
+		//trainHandler->update(seconds_elapsed);
+		Stage::update(seconds_elapsed);
+	}
 }
 
 void DepositionStage::render() {

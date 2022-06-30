@@ -11,6 +11,7 @@
 #include "../input.h"
 #include "../extra/SoundManager.h"
 #include "../framework.h"
+#include "../game.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
@@ -219,7 +220,11 @@ void ProceduralWorldStage::checkHorn() {
 void ProceduralWorldStage::update(double deltaTime)
 {
 	if (trainHandler->getHealth() == 0) {
-		//TODO: end game;
+		gameInstance->moveToStageNum(4);
+	}
+	
+	if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
+		gameInstance->moveToStageNum(3);
 	}
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
@@ -232,6 +237,8 @@ void ProceduralWorldStage::update(double deltaTime)
 	if (resourceData.w != -1 && Input::wasKeyPressed(SDL_SCANCODE_E)) {
 		getResource(resourceData);
 	}
+
+	
 	
 	if (Input::wasKeyPressed(SDL_SCANCODE_I)) {
 		inventoryHandler->setOpen(!inventoryHandler->getIsOpen());
