@@ -54,6 +54,7 @@ ProceduralWorldStage* proceduralStage = NULL;
 
 Player* player= NULL;
 
+Vector3 checkpoint;
 
 InventoryHandler* inv = NULL;
 bool invOpen = false;
@@ -121,6 +122,9 @@ DepositionStage* loadTestDepo() {
 void loadStages() {
 	depoStage = loadTestDepo();
 	proceduralStage = testStage();
+
+	for (auto& item : depoStage->getScene()->root->children)
+		item->ingoreCollision = true;
 }
 
 Game::Game(int window_width, int window_height, SDL_Window* window)
@@ -384,8 +388,7 @@ void Game::update(double seconds_elapsed)
 		if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) camera->move(Vector3(-1.0f, 0.0f, 0.0f) * speed);*/
 
 
-	player->testCollisions();
-	player->updatePlayer(seconds_elapsed);
+	
 
 	if (Input::wasKeyPressed(SDL_SCANCODE_O))
 	{
@@ -529,9 +532,13 @@ void Game::moveToStageNum(int num)
 			//this->setActiveStage(this->stage1); //Intro Stage
 			break;
 		case 2:
+			player->position = checkpoint;
 			this->setActiveStage(proceduralStage); //Procedural Stage
 			break;
 		case 3:
+			checkpoint = player->position;
+			player->speedVector = Vector3(0, 0, 0);
+			player->position = Vector3(0, 14, 0);
 			this->setActiveStage(depoStage); //Depo Stage
 			break;
 		case 4:

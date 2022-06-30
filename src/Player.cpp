@@ -286,7 +286,8 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 	Camera* cam = Camera::current;
 	Game* game = Game::instance;
 	if (!game->cameraLocked) return;
-	acceleration = 15;
+	
+	float speed = 15;
 
 	Vector3 oldPos = playerMesh->getPosition();
 	
@@ -325,20 +326,7 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 	moveRight = Vector3(right.x, 0, right.z);
 
 	//Ground player
-	if ((oldPos.y - 15) > y_pos) {
-
-		speedVector += Vector3(0, -15, 0) * seconds_elapsed;
-		dontDecelY = true;
-	}
-	else {
-
-		canJump = true;
-		if (speedVector.y > .1)
-			speedVector = Vector3(speedVector.x, speedVector.y - (speedVector.y * .2 * seconds_elapsed), speedVector.z);
-		else
-			speedVector = Vector3(speedVector.x, 0, speedVector.z);
-
-	}
+	
 
 	Input::centerMouse();
 
@@ -346,19 +334,19 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 
 	if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) {
 		wasMoved = true;
-		speedVector += moveFront * (acceleration * seconds_elapsed);
+		speedVector += moveFront * (speed * seconds_elapsed);
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) {
 		wasMoved = true;
-		speedVector += moveFront * (-acceleration * seconds_elapsed);
+		speedVector += moveFront * (-speed * seconds_elapsed);
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_A) || Input::isKeyPressed(SDL_SCANCODE_LEFT)) {
 		wasMoved = true;
-		speedVector += moveRight * seconds_elapsed * acceleration;
+		speedVector += moveRight * seconds_elapsed * speed;
 	}
 	if (Input::isKeyPressed(SDL_SCANCODE_D) || Input::isKeyPressed(SDL_SCANCODE_RIGHT)) {
 		wasMoved = true;
-		speedVector += moveRight * seconds_elapsed * (-acceleration);
+		speedVector += moveRight * seconds_elapsed * (-speed);
 	}
 
 	
@@ -374,9 +362,9 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 	}
 
 
-	double height = 14 - oldPos.y;
+	double height = 10-oldPos.y;
 
-	if ((newPos.x > 6 && newPos.x < 15) && newPos.z > 16 ) height=height+3;
+	if ((newPos.x > 6 && newPos.x < 15) && newPos.z > 16) height = height + 3;
 	if (newPos.x > -15 && newPos.x < -5) height = height - 1;
 	this->playerMesh->model.translateGlobal(speedVector.x, height, speedVector.z);
 	
