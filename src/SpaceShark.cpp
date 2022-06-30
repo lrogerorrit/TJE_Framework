@@ -7,10 +7,10 @@
 #include "extra/easing.h"
 #include "extra/coldet/coldet.h"
 
-Vector2 idleTimes(1, 3);//(10, 30);
+Vector2 idleTimes(30, 50);
 Vector2 attackTimes(20, 30);//(20, 60);
-Vector2 backStageTimes(10, 30);
-Vector2 homingTimes(10, 30);//(50, 80);
+Vector2 backStageTimes(30, 60);
+Vector2 homingTimes(30, 60);//(50, 80);
 float SCARE_CONSTANT = 1.23;
 
 
@@ -173,7 +173,8 @@ void SpaceShark::scareShark(Vector3 pos) {
 	/*float invDist = clamp(this->maxScareDistance - dist, 0, this->maxScareDistance);
 	this->scareLevels += SCARE_CONSTANT * invDist;*/
 	//if (dist < this->maxScareDistance) {
-	this->scareLevels = 100;
+	if(this->state== eSharkState::ATTACK)
+		this->scareLevels = 100;
 	//}
 }
 
@@ -252,6 +253,7 @@ void SpaceShark::updateBackstage(double deltaTime)
 	this->inBackstage = true;
 
 	//Change stage
+	if (!this->canSpawn) return;
 	if ((timeInStage > backStageTimes.y) || ((timeInStage > backStageTimes.x) && (randomInt() >= 6)))
 		this->setState(eSharkState::IDLE);
 	
@@ -333,6 +335,15 @@ void SpaceShark::updateHoming(double deltaTime)
 
 void SpaceShark::Update(double deltaTime)
 {
+	
+	
+	if (!this->canSpawn) {
+		if (this->state == eSharkState::ATTACK || this->state == eSharkState::HOMING)
+			this->setState(eSharkState::RETREAT);
+		else if (this->state == eSharkState::IDLE)
+			this->setState(eSharkState::BACKSTAGE);
+	}
+	
 	if(this->prevState!= this->state)
 	{
 		std::cout << "changed state to ";

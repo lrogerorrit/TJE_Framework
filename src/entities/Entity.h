@@ -67,6 +67,7 @@ public:
 	
 	void addChild(Entity* ent);
 	void removeChild(Entity* ent);
+	void removeAllChildren();
 
 	virtual bool getShouldRenderEntity();
 	

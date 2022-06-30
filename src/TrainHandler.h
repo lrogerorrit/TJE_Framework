@@ -65,6 +65,10 @@ public:
 	
 	void setSpeed(double speed);
 	double getSpeed();
+
+	void setCarPosition(float pos);
+
+	float getCurveProgress();
 	
 	void update(double dt);
 	

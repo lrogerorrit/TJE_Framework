@@ -35,6 +35,7 @@ private:
 	bool canAttack = false;
 	bool inBackstage = false;
 	bool isInit = false;
+	bool canSpawn = false;
 	
 	bool rightSide = true;
 	float train_separation = 60.0f;
@@ -50,7 +51,7 @@ private:
 	//Attack
 	float maxScareDistance = 50;
 	int attackCount = 0;
-	int maxAttackTimes = 5;
+	int maxAttackTimes = 3;
 	float scareLevels = 0.0;
 	int scared_times = 0;
 	float attackDamageDistance = 25;
@@ -113,6 +114,7 @@ public:
 	void Update(double deltaTime);
 	void Render();
 	void setState(eSharkState state);
+	void setCanSpawn(bool state) { canSpawn = state; }
 	void setCanAttack(bool state){
 		canAttack = state;
 	}

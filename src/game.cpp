@@ -194,13 +194,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	player = new Player();
 
 
-	inv->addToInventory(ePickupType::coal, 3);
-	inv->addToInventory(ePickupType::wood, 13);
 	
-	
-	inv->addToInventory(ePickupType::wood, 1);
-	inv->addToInventory(ePickupType::gold, 1);
-	inv->addToInventory(ePickupType::coal, 1);
 
 	
 	//End coses uri																				//////////
@@ -379,8 +373,8 @@ void Game::update(double seconds_elapsed)
 	
 	
 	
+	
 	/*
-
 		if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
 		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);

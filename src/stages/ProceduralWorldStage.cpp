@@ -27,6 +27,10 @@ void ProceduralWorldStage::loadAssets() {
 
 void ProceduralWorldStage::generateProceduralScenery()
 {
+	//
+	proceduralParent->removeAllChildren();
+	this->scenery.clear();
+
 	Vector4 defaultCol = Vector4(1, 1, 1, 1);
 	float scales[7] = { .5,.5,.5,.5,10,.5,10 }; //{ .5,.5, .5,30 };
 	float chances[7] = { 10,10,10,10,9,7,6 }; //{ .5,.5, .5,30 };
@@ -88,7 +92,7 @@ void ProceduralWorldStage::generateProceduralScenery()
 		data.scenery->groupScale(scales[ii]);
 		if (ii > 3)
 			data.scenery->ingoreCollision = true;
-		this->scene->getRoot()->addChild(data.scenery);
+		proceduralParent->addChild(data.scenery);
 	}
 
 
@@ -127,6 +131,7 @@ ProceduralWorldStage::~ProceduralWorldStage()
 
 void ProceduralWorldStage::initStage()
 {
+	proceduralParent = new Entity();
 	this->guiManager = GUImanager::instance;
 	this->inventoryHandler = InventoryHandler::instance;
 	this->soundManager = SoundManager::instance;
@@ -138,10 +143,14 @@ void ProceduralWorldStage::initStage()
 
 	//TODO: Generate spline randomly
 	std::vector<Vector3> positions({ Vector3(0, 0, 0), Vector3(5, 0, 2), Vector3(10, 0, 5), Vector3(12, 0, 10), Vector3(15, 0, 20), Vector3(20,0,30), Vector3(35,0,38), Vector3(40,0,45),
-		Vector3(50,0,50),Vector3(80,0,100),Vector3(120,0,150),Vector3(180,0,160),Vector3(200,0,200),Vector3(250,0,300),Vector3(400,0,350),Vector3(500,0,500)
+		Vector3(50,0,50),Vector3(80,0,100),Vector3(120,0,150),Vector3(180,0,160),Vector3(200,0,200),Vector3(250,0,300),Vector3(400,0,350),Vector3(500,0,500),Vector3(600,0,600),
+		Vector3(700,0,700),Vector3(800,0,800),Vector3(900,0,900),Vector3(1000,0,1000),Vector3(1100,0,1100),Vector3(1200,0,1200),Vector3(1300,0,1300),
+		Vector3(1400,0,1400),Vector3(1500,0,1500),Vector3(1600,0,1600),Vector3(1700,0,1700),Vector3(1800,0,1800),Vector3(1900,0,1900),Vector3(2000,0,2000),
+		
 		});
 	BeizerCurve* curve = new BeizerCurve(positions);
 	this->trackHandler->setActiveCurve(curve);
+	this->getScene()->getRoot()->addChild(proceduralParent);
 	generateProceduralScenery();
 }
 
@@ -205,8 +214,8 @@ void ProceduralWorldStage::checkHorn() {
 
 	Vector3 plPos = this->player->getPosition();
 	float dist = hornPos.distance(plPos);
-	this->showHornText = (dist < 20);
-	if (Input::wasKeyPressed(SDL_SCANCODE_E) && dist < 20) {
+	this->showHornText = (dist < 10);
+	if (Input::wasKeyPressed(SDL_SCANCODE_E) && dist < 10) {
 		std::cout << "pressed horn\n";
 		soundManager->playSound("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
 		//soundManager->PlaySound("data/audio/soundEffects/horns.wav",hornPos);
@@ -220,12 +229,25 @@ void ProceduralWorldStage::checkHorn() {
 
 void ProceduralWorldStage::update(double deltaTime)
 {
+	
+	if (changeCooldown > 0) {
+		changeCooldown -= deltaTime;
+		canChangeStage = false;
+	}
+	else {
+		changeCooldown = 0;
+		canChangeStage = true;
+	}
+	
 	if (trainHandler->getHealth() == 0) {
 		gameInstance->moveToStageNum(4);
 	}
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
+	if (canChangeStage&& Input::wasKeyPressed(SDL_SCANCODE_B)) {
+		changeCooldown = 120;
 		gameInstance->moveToStageNum(3);
+		return;
+		
 	}
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
@@ -250,6 +272,37 @@ void ProceduralWorldStage::update(double deltaTime)
 	if (Input::wasKeyPressed(SDL_SCANCODE_I)) {
 		inventoryHandler->setOpen(!inventoryHandler->getIsOpen());
 	}
+	
+	if (isPreparingForLoop) {
+		if (loopStage == 0) { //Fade
+			blockerTransparency -= 1 * deltaTime;
+			if (blockerTransparency <= 0) {
+				blockerTransparency = 0;
+			
+				loopStage = 1;
+			}
+		}
+		else if (loopStage == 1) { //Move back and regenerate resources;
+			this->generateProceduralScenery();
+			this->trainHandler->setCarPosition(0);
+			loopStage = 2;
+		}
+		else if (loopStage == 2) {
+			blockerTransparency += 1 * deltaTime;
+			std::cout << blockerTransparency << "\n";
+
+			if (blockerTransparency >= 1) {
+				blockerTransparency = 1;
+				loopStage = 0;
+				isPreparingForLoop = false;
+			}
+		}
+	}
+	//std::cout << trainHandler->getCurveProgress() << "\n";
+	if (trainHandler->getCurveProgress() > .9 && !isPreparingForLoop) {
+		std::cout << "Preparing for loop\n";
+		isPreparingForLoop = true;
+	}
 
 	Stage::update(deltaTime);
 
@@ -262,6 +315,19 @@ void ProceduralWorldStage::renderUI() {
 		guiManager->doText(Vector2(gameInstance->window_width * .6, 35),"E - Pick Item",3);
 	}else if(this->showHornText)
 		guiManager->doText(Vector2(gameInstance->window_width * .6, 35), "E - Play Horn", 3);
+	else if (this->changeCooldown > 0) {
+		std::string str = "Teleport Cooldown: " + std::to_string(int(changeCooldown));
+		guiManager->doText(Vector2(gameInstance->window_width * .54, 35), str, 3);
+	}
+	else {
+		guiManager->doText(Vector2(gameInstance->window_width * .7, 35), "B - Teleport", 3);
+	
+
+	}
+		
+	if (isPreparingForLoop && blockerTransparency <1) {
+		guiManager->doFrame(Vector2(gameInstance->window_width / 2, gameInstance->window_height / 2), Vector2(800, 600), Vector4(0, 0, 0, blockerTransparency));
+	}
 }
 
 void ProceduralWorldStage::render()

@@ -65,7 +65,7 @@ void MeshEntity::render()
 	shader->disable();
 	
 	if (this->hasCollisionMesh) {
-		this->collisionMesh->renderBounding(globalModel,false);
+		//this->collisionMesh->renderBounding(globalModel,false);
 	}
 
 	Entity::render();

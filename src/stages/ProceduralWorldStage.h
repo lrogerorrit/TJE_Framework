@@ -38,6 +38,8 @@ struct sceneryData {
 
 };
 
+class Entity;
+
 class ProceduralWorldStage :
 	public Stage
 {
@@ -48,7 +50,15 @@ private:
 	Player* player;
 	InventoryHandler* inventoryHandler;
 	SoundManager* soundManager;
-	GUImanager* guiManager = NULL;;
+	GUImanager* guiManager = NULL;
+	Entity* proceduralParent = NULL;
+	
+	bool canChangeStage = true;
+	float changeCooldown = 0;
+
+	bool isPreparingForLoop = false;
+	int loopStage = 0;
+	float blockerTransparency = 1;
 
 	bool showPickText = false;
 	bool showHornText = false;

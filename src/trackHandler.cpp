@@ -6,10 +6,10 @@
 #include "shader.h"
 #include "texture.h"
 
-const int trackSeparation = 10;
-float track_size = 1.0f;
-float tie_width = 1.0f;
-float tie_height = .25f;
+const int trackSeparation = 26;
+float track_size = 2.0f;
+float tie_width = 2.5f;
+float tie_height = .75f;
 bool calculated = false;
 
 TrackHandler* TrackHandler::instance = NULL;

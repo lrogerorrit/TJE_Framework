@@ -107,6 +107,9 @@
     <ClCompile Include="..\..\src\stages\MenuStage.cpp">
       <Filter>stages</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\stages\DeathStage.cpp">
+      <Filter>stages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\camera.h" />
@@ -218,6 +221,9 @@
       <Filter>extra</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\stages\MenuStage.h">
+      <Filter>stages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stages\DeathStage.h">
       <Filter>stages</Filter>
     </ClInclude>
   </ItemGroup>

@@ -132,6 +132,12 @@ void Entity::removeChild(Entity* ent)
 		}
 	}
 }
+void Entity::removeAllChildren() {
+	for (int i = 0; i < children.size(); ++i) {
+		children[i]->destroy();
+	}
+	children.empty();
+}
 
 bool Entity::getShouldRenderEntity()
 {

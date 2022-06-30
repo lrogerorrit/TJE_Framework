@@ -11,7 +11,7 @@ class GUImanager;
 class Game;
 class InventoryHandler;
 class Player;
-
+class CubeMap;
 
 enum class eBlockType {
 	Wall1,
@@ -33,6 +33,7 @@ class DepositionStage :
 		bool confirmGuiVisible = false;
 		GUImanager* guiManager = NULL;
 		Game* game;
+		CubeMap* cubeMap = NULL;
 		
 		bool showScreenText = false;
 

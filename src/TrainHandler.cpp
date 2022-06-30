@@ -118,6 +118,19 @@ double TrainHandler::getSpeed()
 	return this->speed;
 }
 
+void TrainHandler::setCarPosition(float pos) {
+	for (int i = 0; i < this->trainCarArray.size(); i++)
+	{
+		this->trainCarArray[i].curvePos = pos;
+	}
+	
+}
+
+float TrainHandler::getCurveProgress() {
+	return this->trainCarArray[0].curvePos;
+	
+}
+
 void TrainHandler::update(double dt)
 {
 	collidedWithPlayer = false;

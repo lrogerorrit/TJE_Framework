@@ -8,6 +8,7 @@
 #include "../GUImanager.h"
 #include "../InventoryHandler.h"
 #include "../input.h"
+#include "../CubeMap.h"
 
 
 
@@ -31,7 +32,7 @@ void DepositionStage::initStage() {
 	this->game = Game::instance;
 	this->inventoryHandler= InventoryHandler::instance;
 	std::cout << inventoryHandler->inventory.size();
-	
+	cubeMap = CubeMap::instance;
 
 	
 	loadAssets();
@@ -82,7 +83,7 @@ void DepositionStage::renderUI() {
 }
 
 void DepositionStage::render() {
-	
+	cubeMap->Render();
 	
 	//trainHandler->render();
 	Stage::render();
