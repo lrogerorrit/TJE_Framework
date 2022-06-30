@@ -488,3 +488,25 @@ void Game::setActiveStage(Stage* stage)
 	this->activeStage = stage;
 }
 
+void Game::moveToStageNum(int num)
+{
+	switch (num) {
+		case 0:
+		//this->setActiveStage(this->stage0); //Menu Stage
+			break;
+		case 1:
+			//this->setActiveStage(this->stage1); //Intro Stage
+			break;
+		case 2:
+			//this->setActiveStage(this->stage2); //Procedural Stage
+			break;
+		case 3:
+			//this->setActiveStage(this->stage3); //Depo Stage
+			break;
+		case 4:
+			//this->setActiveStage(this->stage4); //Death Stage
+			break;
+		
+	}
+}
+
