@@ -12,6 +12,7 @@
 #include "../extra/SoundManager.h"
 #include "../framework.h"
 #include "../game.h"
+#include "../GUImanager.h"
 
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
@@ -126,7 +127,7 @@ ProceduralWorldStage::~ProceduralWorldStage()
 
 void ProceduralWorldStage::initStage()
 {
-
+	this->guiManager = GUImanager::instance;
 	this->inventoryHandler = InventoryHandler::instance;
 	this->soundManager = SoundManager::instance;
 	stageType = eStageType::PROCEDURAL_WORLD;
@@ -204,7 +205,7 @@ void ProceduralWorldStage::checkHorn() {
 
 	Vector3 plPos = this->player->getPosition();
 	float dist = hornPos.distance(plPos);
-
+	this->showHornText = (dist < 20);
 	if (Input::wasKeyPressed(SDL_SCANCODE_E) && dist < 20) {
 		std::cout << "pressed horn\n";
 		soundManager->playSound("data/audio/soundEffects/horns.wav", this->trainHandler->getCarData(0).hornMesh->getGlobalMatrix().getTranslation());
@@ -233,6 +234,9 @@ void ProceduralWorldStage::update(double deltaTime)
 	spaceShark->Update(deltaTime);
 
 	Vector4 resourceData = getNearResource();
+	
+	showPickText = (resourceData.w != -1.0f);
+	
 	//	std::cout<<resourceData.x<<", "<<resourceData.y<<", "<<resourceData.z<<", "<<resourceData.w<<std::endl;
 	if (resourceData.w != -1 && Input::wasKeyPressed(SDL_SCANCODE_E)) {
 		getResource(resourceData);
@@ -250,6 +254,13 @@ void ProceduralWorldStage::update(double deltaTime)
 
 }
 
+void ProceduralWorldStage::renderUI() {
+	if (this->showPickText && !inventoryHandler->getIsOpen()) {
+		guiManager->doText(Vector2(gameInstance->window_width * .6, 35),"E - Pick Item",3);
+	}else if(this->showHornText)
+		guiManager->doText(Vector2(gameInstance->window_width * .6, 35), "E - Play Horn", 3);
+}
+
 void ProceduralWorldStage::render()
 {
 	cubeMap->Render();
@@ -263,6 +274,7 @@ void ProceduralWorldStage::render()
 	//UI Render
 	inventoryHandler->render();
 	trainHandler->renderHealth();
+	renderUI();
 
 }
 
