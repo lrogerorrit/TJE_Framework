@@ -8,7 +8,7 @@
 
 SceneParser* SceneParser::instance = NULL;
 
-std::string meshDirectory = "data/assets/";
+std::string meshDirectory = "data/assets/depo/";
 
 std::vector<std::string> getFileLines(char* path) {
 	std::ifstream file(path);
@@ -52,6 +52,13 @@ parseMeshData* parseMesh(std::string str) {
 	return toReturn;
 }
 
+Texture* parseTexture(std::string str) {
+	std::string route = meshDirectory + str;
+	Texture* texture = Texture::Get(route.c_str());
+	if (!texture) return NULL;
+	return texture;
+}
+
 Matrix44* parseModel(std::string str) {
 	Matrix44* toReturn= new Matrix44();
 	std::vector<std::string> data = separateStringBy(str, ",");
@@ -70,7 +77,9 @@ Vector3* parseVector3(std::string str) {
 		toReturn->v[i] = std::stof(data[i]);
 	}
 	data.clear();
-	
+	int scale = 10;
+
+	toReturn = new Vector3(toReturn->x * scale, toReturn->y * scale, toReturn->z * scale);
 	return toReturn;
 }
 
@@ -83,7 +92,7 @@ Scene* SceneParser::parseFile(char* path) {
 	Scene* scene = new Scene();
 
 	std::vector<eParseArguments> args;
-	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
+	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/rockShader.fs");
 	
 	for (auto arg : separateStringBy(data[0]," ")) {
 		if (arg == "MESH" || arg == "MESH_NO_FOLDER")
@@ -98,6 +107,8 @@ Scene* SceneParser::parseFile(char* path) {
 			args.push_back(eParseArguments::EULER);
 		else if (arg == "SCALE")
 			args.push_back(eParseArguments::SCALE);
+		else if (arg == "TEXTURE")
+			args.push_back(eParseArguments::TEXTURE);
 		else
 			args.push_back(eParseArguments::NA);
 	}
@@ -120,7 +131,6 @@ Scene* SceneParser::parseFile(char* path) {
 				if (!result) continue;
 				mesh = result->mesh;
 				texture = result->texture;
-				
 			}
 			else if (args[j] == eParseArguments::MODEL) {
 				model=parseModel(lineData[j]);
@@ -140,6 +150,9 @@ Scene* SceneParser::parseFile(char* path) {
 			}
 			else if (args[j] == eParseArguments::NA) {
 				std::cout<<"Error: Invalid argument\n";
+			}
+			else if (args[j] == eParseArguments::TEXTURE) {
+				texture = parseTexture(lineData[j]);
 			}
 		
 		}

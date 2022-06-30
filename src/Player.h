@@ -30,6 +30,7 @@ public:
 	float deceleration = .8;//.04f;
 	float pullRopeSpeed = 2.0f;
 	bool dontDecelY = false;
+	bool isOnDepo = true; //change this if not working on update
 	
 	
 
@@ -42,9 +43,13 @@ public:
 	void updatePlayer(double seconds_elapsed);
 	void applyMovementForce(eDirection direction,double seconds_elapsed);
 	bool testCollisions();
+
+	void updatePlayerDepo(double seconds_elapsed);
+
 	inline Vector3 getPosition() {
 		return this->position;
 	};
+
 	
 };
 

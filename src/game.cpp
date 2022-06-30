@@ -113,7 +113,7 @@ void loadTestCar(Game* game) {
 
 DepositionStage* loadTestDepo() {
 	SceneParser* parser = SceneParser::instance;
-	Scene* sc= parser->parseFile("data/export.scene");
+	Scene* sc= parser->parseFile("data/trainStation.scene");
 	DepositionStage* stage = new DepositionStage(sc);
 	return stage;
 }
@@ -203,7 +203,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	loadStages();
 
+
 	this->setActiveStage(proceduralStage);
+
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
@@ -347,6 +349,22 @@ void Game::update(double seconds_elapsed)
 
 
 	//Coses URI
+
+/*
+	if (cameraLocked) {
+		SDL_ShowCursor(false);
+		if (isdepo) {
+			player->updatePlayerDepo(seconds_elapsed);
+		}
+		else {
+			
+			player->testCollisions();
+			player->updatePlayer(seconds_elapsed);
+		}
+	}
+	else {
+		SDL_ShowCursor(true);*/
+
 	if (guiManager->getIsGuiOpen())
 		cameraLocked = false;
 	else
@@ -358,6 +376,7 @@ void Game::update(double seconds_elapsed)
 	
 	
 	/*
+
 		if (Input::isKeyPressed(SDL_SCANCODE_LSHIFT)) speed *= 10; //move faster with left shift
 		if (Input::isKeyPressed(SDL_SCANCODE_W) || Input::isKeyPressed(SDL_SCANCODE_UP)) camera->move(Vector3(0.0f, 0.0f, 1.0f) * speed);
 		if (Input::isKeyPressed(SDL_SCANCODE_S) || Input::isKeyPressed(SDL_SCANCODE_DOWN)) camera->move(Vector3(0.0f, 0.0f, -1.0f) * speed);
