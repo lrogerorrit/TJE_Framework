@@ -25,58 +25,57 @@ enum class eSceneryType {
 	PLANK,
 	GOLD,
 	COAL
-	
-	
+
+
 };
 
 struct sceneryData {
 	GroupEntity* scenery;
 	eSceneryType type;
 	std::vector<Vector3> positions;
-	
-	sceneryData(std::vector<Vector3>& positions, eSceneryType type,bool useRockShader=true);
-	
+
+	sceneryData(std::vector<Vector3>& positions, eSceneryType type, bool useRockShader = true);
+
 };
 
 class ProceduralWorldStage :
-    public Stage
+	public Stage
 {
-	private:
-		TrackHandler* trackHandler=NULL;
-		TrainHandler* trainHandler=NULL;
-		SpaceShark* spaceShark=NULL;
-		Player* player;
-		InventoryHandler* inventoryHandler;
-		SoundManager* soundManager;
-		
-		
-		std::vector<sceneryData> scenery;
-		CubeMap* cubeMap = NULL;
-		
-		const int max_scenery_types = 7;
+private:
+	TrackHandler* trackHandler = NULL;
+	TrainHandler* trainHandler = NULL;
+	SpaceShark* spaceShark = NULL;
+	Player* player;
+	InventoryHandler* inventoryHandler;
+	SoundManager* soundManager;
 
-		void loadAssets();
 
-		void generateProceduralScenery();
-		
-		void renderScenery();
-	public:
-		ProceduralWorldStage(Scene* scene);
-		ProceduralWorldStage(Scene* scene, TrainHandler* trainHandler);
-		~ProceduralWorldStage();
-		void initStage();
+	std::vector<sceneryData> scenery;
+	CubeMap* cubeMap = NULL;
 
-		void initSpaceShark();
+	const int max_scenery_types = 7;
 
-		bool isPlayerNearResource();
+	void loadAssets();
 
-		Vector4 getNearResource();
+	void generateProceduralScenery();
 
-		void getResource(Vector4 data);
+	void renderScenery();
+public:
+	ProceduralWorldStage(Scene* scene);
+	ProceduralWorldStage(Scene* scene, TrainHandler* trainHandler);
+	~ProceduralWorldStage();
+	void initStage();
 
-		void checkHorn();
+	void initSpaceShark();
 
-		void update(double deltaTime) ;
-		void render();
+	bool isPlayerNearResource();
+
+	Vector4 getNearResource();
+
+	void getResource(Vector4 data);
+
+	void checkHorn();
+
+	void update(double deltaTime);
+	void render();
 };
-
