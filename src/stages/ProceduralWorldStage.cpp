@@ -243,7 +243,7 @@ void ProceduralWorldStage::update(double deltaTime)
 		gameInstance->moveToStageNum(4);
 	}
 
-	if (canChangeStage&& Input::wasKeyPressed(SDL_SCANCODE_B)) {
+	if (canChangeStage && !inventoryHandler->getIsOpen() && Input::wasKeyPressed(SDL_SCANCODE_B)) {
 		changeCooldown = 120;
 		gameInstance->moveToStageNum(3);
 		return;

@@ -58,6 +58,7 @@ class DepositionStage :
 		void update(double deltaTime);
 		void renderUI();
 		void render();
+		void onTeleport();
 		void renderConfirmationMenu();
 		void renderUpgradeMenu();
 		bool checkHasEnoughResources();

@@ -54,12 +54,14 @@ void DepositionStage::update(double seconds_elapsed) {
 	if (!getIsUpgradeGuiVisible()) {
 		guiManager->setIsGuiOpen(false);
 		Input::centerMouse();
-		
-		if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
+		if (Input::wasKeyPressed(SDL_SCANCODE_I)) {
+			inventoryHandler->setOpen(!inventoryHandler->getIsOpen());
+		}
+		if (Input::wasKeyPressed(SDL_SCANCODE_B) && !inventoryHandler->getIsOpen()) {
 			gameInstance->moveToStageNum(2);
 		}
 
-		if (this->player->position.distance(Vector3(5, 13, -15)) < 5) {
+		if (this->player->position.distance(Vector3(5, 13, -15)) < 8) {
 			this->showScreenText = true;
 			
 			if (Input::wasKeyPressed(SDL_SCANCODE_E)) {
@@ -80,6 +82,9 @@ void DepositionStage::update(double seconds_elapsed) {
 void DepositionStage::renderUI() {
 	if(this->showScreenText)
 		this->guiManager->doText(Vector2(gameInstance->window_width * .5, 4), "E - Open Upgrade Menu", 3);
+	else if(!this->upgradeGuiVisible)
+		guiManager->doText(Vector2(gameInstance->window_width * .7, 35), "B - Teleport", 3);
+		
 }
 
 void DepositionStage::render() {
@@ -89,11 +94,18 @@ void DepositionStage::render() {
 	Stage::render();
 
 	//Render ui:
+	inventoryHandler->render();
 	renderUI();
 	this->renderUpgradeMenu();
 	renderConfirmationMenu();
 	
 	
+}
+
+void DepositionStage::onTeleport()
+{
+	this->player->position = Vector3(0, 14, 0);
+	this->player->speedVector = Vector3(0, 0, 0);
 }
 
 

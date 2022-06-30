@@ -215,9 +215,12 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 
 	
 
-	
+	cameraLocked = true;
+	shouldCamBeLocked = true;
+	Input::centerMouse();
 	//hide the cursor
 	SDL_ShowCursor(!mouse_locked); //hide or show the mouse
+	
 }
 
 //what to do when the image has to be draw
@@ -384,12 +387,12 @@ void Game::update(double seconds_elapsed)
 
 	
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_O))
+	/*if (Input::wasKeyPressed(SDL_SCANCODE_O))
 	{
 		cameraLocked = !cameraLocked;
 		shouldCamBeLocked = !shouldCamBeLocked;
 		Input::centerMouse();
-	};
+	};*/
 
 	
 
@@ -534,6 +537,7 @@ void Game::moveToStageNum(int num)
 			player->speedVector = Vector3(0, 0, 0);
 			player->position = Vector3(0, 14, 0);
 			this->setActiveStage(depoStage); //Depo Stage
+			depoStage->onTeleport();
 			break;
 		case 4:
 			//this->setActiveStage(this->stage4); //Death Stage
