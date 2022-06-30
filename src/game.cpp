@@ -48,15 +48,12 @@ MeshEntity* playerMesh;
 
 Player* player= NULL;
 
-Stage* depoStage;
-Stage* spaceStage;
-
 
 
 
 //end coses uri
 Game* Game::instance = NULL;
-bool isdepo = true;
+
 
 Scene* returnTestScene() {
 	Scene* testScene= new Scene();
@@ -166,10 +163,9 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//End coses uri																				//////////
 
-	spaceStage = testStage();
-	depoStage = loadTestDepo();
+	
 
-	this->setActiveStage(depoStage);
+
 
 	loadTestCar(this);
 	trainHandler->setActiveCurve(TrackHandler::instance->getActiveCurve());
@@ -317,19 +313,7 @@ void Game::update(double seconds_elapsed)
 		Input::centerMouse();
 	};
 
-	if (Input::wasKeyPressed(SDL_SCANCODE_B))
-	{
-		if (isdepo) {
-			player->position = Vector3(0, 0, 0);//Change to train location
-			setActiveStage(spaceStage);
-		}
-		else {
-			player->position = Vector3(0, 4, 0);
-			setActiveStage(depoStage);
-			
-		}
-		isdepo = !isdepo;
-	};
+	
 
 	// end Coses URI
 	
