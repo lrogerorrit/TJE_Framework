@@ -29,6 +29,7 @@ public:
 	SDL_Window* window;
 	int window_width;
 	int window_height;
+	int keyState = 0;
 
 	//some globals
 	long frame;
@@ -37,6 +38,7 @@ public:
 	int fps;
 	bool must_exit;
 	bool cameraLocked;
+	bool shouldCamBeLocked = false;;
 	GUImanager* guiManager;
 
 	Player* player;
@@ -85,6 +87,8 @@ public:
 	void addToDestroyQueue(Entity* ent);
 	void setActiveScene(Scene* scene);
 	void setActiveStage(Stage* stage);
+
+	void moveToStageNum(int num);
 };
 
 

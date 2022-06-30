@@ -212,6 +212,9 @@ void ProceduralWorldStage::checkHorn() {
 
 void ProceduralWorldStage::update(double deltaTime)
 {
+	if (trainHandler->getHealth() == 0) {
+		//TODO: end game;
+	}
 	this->trackHandler->updatePosition(deltaTime);
 	if (this->trainHandler)
 		this->trainHandler->update(deltaTime);
@@ -224,6 +227,9 @@ void ProceduralWorldStage::update(double deltaTime)
 		getResource(resourceData);
 	}
 	
+	if (Input::wasKeyPressed(SDL_SCANCODE_I)) {
+		inventoryHandler->setOpen(!inventoryHandler->getIsOpen());
+	}
 
 	Stage::update(deltaTime);
 
@@ -239,6 +245,11 @@ void ProceduralWorldStage::render()
 	trackHandler->renderTrack();
 	spaceShark->Render();
 	Stage::render();
+	
+
+	//UI Render
+	inventoryHandler->render();
+	trainHandler->renderHealth();
 
 }
 
