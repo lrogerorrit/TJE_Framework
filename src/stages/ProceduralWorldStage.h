@@ -14,7 +14,7 @@ class InventoryHandler;
 class SpaceShark;
 class Player;
 class SoundManager;
-
+class GUImanager;
 
 
 enum class eSceneryType {
@@ -48,8 +48,10 @@ private:
 	Player* player;
 	InventoryHandler* inventoryHandler;
 	SoundManager* soundManager;
+	GUImanager* guiManager = NULL;;
 
-
+	bool showPickText = false;
+	bool showHornText = false;
 	std::vector<sceneryData> scenery;
 	CubeMap* cubeMap = NULL;
 
@@ -77,5 +79,6 @@ public:
 	void checkHorn();
 
 	void update(double deltaTime);
+	void renderUI();
 	void render();
 };
