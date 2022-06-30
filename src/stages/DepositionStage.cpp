@@ -50,7 +50,7 @@ void DepositionStage::initStage() {
 
 void DepositionStage::update(double seconds_elapsed) {
 
-	if (getIsUpgradeGuiVisible()) {
+	if (!getIsUpgradeGuiVisible()) {
 		;
 		if (Input::wasKeyPressed(SDL_SCANCODE_B)) {
 			gameInstance->moveToStageNum(2);
@@ -63,7 +63,11 @@ void DepositionStage::update(double seconds_elapsed) {
 			}
 		}
 		//trainHandler->update(seconds_elapsed);
+//		player->testCollisions();
+		player->updatePlayerDepo(seconds_elapsed);
 		Stage::update(seconds_elapsed);
+
+		std::cout<<player->position.x<<" "<<player->position.y<<" "<<player->position.z<<"\r";
 	}
 }
 

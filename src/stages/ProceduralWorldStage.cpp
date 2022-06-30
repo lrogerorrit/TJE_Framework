@@ -233,6 +233,9 @@ void ProceduralWorldStage::update(double deltaTime)
 	checkHorn();
 	spaceShark->Update(deltaTime);
 
+	player->testCollisions();
+	player->updatePlayer(deltaTime);
+	
 	Vector4 resourceData = getNearResource();
 	
 	showPickText = (resourceData.w != -1.0f);
