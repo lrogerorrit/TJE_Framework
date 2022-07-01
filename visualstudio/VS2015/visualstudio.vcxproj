@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\src\stages\MenuStage.cpp" />
     <ClCompile Include="..\..\src\stages\ProceduralWorldStage.cpp" />
     <ClCompile Include="..\..\src\stages\Stage.cpp" />
+    <ClCompile Include="..\..\src\stages\WinStage.cpp" />
     <ClCompile Include="..\..\src\texture.cpp" />
     <ClCompile Include="..\..\src\TrackHandler.cpp" />
     <ClCompile Include="..\..\src\TrainHandler.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="..\..\src\stages\ProceduralWorldStage.h" />
     <ClInclude Include="..\..\src\stages\Stage.h" />
     <ClInclude Include="..\..\src\stages\StagesInclude.h" />
+    <ClInclude Include="..\..\src\stages\WinStage.h" />
     <ClInclude Include="..\..\src\texture.h" />
     <ClInclude Include="..\..\src\TrackHandler.h" />
     <ClInclude Include="..\..\src\TrainHandler.h" />

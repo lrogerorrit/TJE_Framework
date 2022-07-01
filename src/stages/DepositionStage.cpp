@@ -9,6 +9,7 @@
 #include "../InventoryHandler.h"
 #include "../input.h"
 #include "../CubeMap.h"
+#include "../extra/SoundManager.h"
 
 
 
@@ -34,6 +35,7 @@ void DepositionStage::initStage() {
 	std::cout << inventoryHandler->inventory.size();
 	cubeMap = CubeMap::instance;
 
+	soundManager = SoundManager::instance;
 	
 	loadAssets();
 
@@ -50,7 +52,11 @@ void DepositionStage::initStage() {
 }
 
 void DepositionStage::update(double seconds_elapsed) {
-
+	if(isFirst)
+		{
+		isFirst = false;
+		soundManager->playSound("data/audio/voiceovers/depo.wav",player->position,1.0);
+	}
 	if (!getIsUpgradeGuiVisible()) {
 		guiManager->setIsGuiOpen(false);
 		Input::centerMouse();
@@ -106,6 +112,7 @@ void DepositionStage::onTeleport()
 {
 	this->player->position = Vector3(0, 14, 0);
 	this->player->speedVector = Vector3(0, 0, 0);
+	this->player->playerMesh->setPosition(Vector3(0, 14, 0));
 }
 
 
@@ -181,27 +188,28 @@ void DepositionStage::renderConfirmationMenu()
 			upgradeGuiVisible = false;
 			buttonState = Vector4(0, 0, 0, 0);
 			confButtonState = Vector2(0, 0);
-			selectedOption = -1;
 			for (int i = 0; i < confirmationData.size(); ++i) {
 				auto& data = confirmationData[i];
 				
 				inventoryHandler->removeFromInventory((ePickupType)data.x, (int)data.y);
 				
 			}
-			
+			std::cout << "option " << selectedOption<<std::endl;
 			switch (selectedOption){
 				case(0):
 					trainHandler->fixTrain();
 					break;
 				case(1):
-					trainHandler->addToMaxHealth(10);
+					trainHandler->addToMaxHealth(20);
 					break;
 				case(2):
 					game->keyState += 1;
+					std::cout << game->keyState << std::endl;
 					break;
 				
 			}
 			
+			selectedOption = -1;
 			
 		}
 		else {

@@ -53,8 +53,8 @@ private:
 	GUImanager* guiManager = NULL;
 	Entity* proceduralParent = NULL;
 	
-	bool canChangeStage = true;
-	float changeCooldown = 0;
+	bool canChangeStage = false;
+	float changeCooldown = 35;
 
 	bool isPreparingForLoop = false;
 	int loopStage = 0;
@@ -73,6 +73,9 @@ private:
 
 	void renderScenery();
 public:
+	
+	float intoTime = 40;
+
 	ProceduralWorldStage(Scene* scene);
 	ProceduralWorldStage(Scene* scene, TrainHandler* trainHandler);
 	~ProceduralWorldStage();
@@ -88,7 +91,10 @@ public:
 
 	void checkHorn();
 
+
 	void update(double deltaTime);
 	void renderUI();
 	void render();
+
+	void playIntro();
 };

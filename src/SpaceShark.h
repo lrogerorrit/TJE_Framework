@@ -10,7 +10,7 @@ enum class eSharkState {
 	HOMING
 };
 
-
+class SoundManager;
 class TrainHandler;
 
 
@@ -25,7 +25,7 @@ private:
 	eSharkState prevState = eSharkState::IDLE;
 
 
-	
+	SoundManager* soundManager;
 	
 	float lastAttackTime = 0;
 	float timeInStage = 0.0;
@@ -104,6 +104,8 @@ private:
 	
 	
 	double updateDisplAngle(double deltaTime, float speed);
+	
+	bool firstSpawn = true;
 
 public:
 	static SpaceShark* instance;
@@ -120,5 +122,7 @@ public:
 	}
 	
 	void scareShark(Vector3 pos);
+	
+	void reset();
 };
 

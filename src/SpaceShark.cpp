@@ -6,6 +6,8 @@
 #include "shader.h"
 #include "extra/easing.h"
 #include "extra/coldet/coldet.h"
+#include "extra/SoundManager.h"
+#include "Player.h"
 
 Vector2 idleTimes(30, 50);
 Vector2 attackTimes(20, 30);//(20, 60);
@@ -45,7 +47,7 @@ SpaceShark::SpaceShark():trainHandler(TrainHandler::instance)
 	Texture* texture = Texture::Get("data/assets/shark/sharkTexture.png");
 	Shader* shader = Shader::Get("data/shaders/basic.vs", "data/shaders/texture.fs");
 	this->meshEntity = new MeshEntity(mesh, texture, shader);
-	
+	soundManager = SoundManager::instance;
 
 	generateNewPosition();
 }
@@ -79,6 +81,11 @@ void SpaceShark::updateIdle(double deltaTime)
 		this->inBackstage = false;
 		//TODO: Set position of shark near train, but far enough;
 		generateNewPosition();
+		soundManager->playSound("data/audio/soundEffects/sharkAppear.wav",Vector3(this->position.x,0,this->position.y),.5);
+		if (this->firstSpawn) {
+			this->firstSpawn = false;
+			soundManager->playSound("data/audio/voiceovers/sharkSpawn.wav", Player::instance->getPosition(), .8);
+		}
 	}
 
 	idleDisplacement+= .25 * deltaTime*idleDisplacementDir*(speed*2);
@@ -178,6 +185,11 @@ void SpaceShark::scareShark(Vector3 pos) {
 	//}
 }
 
+void SpaceShark::reset()
+{
+	this->firstSpawn = false;
+}
+
 void SpaceShark::updateAttack(double deltaTime)
 {
 
@@ -194,7 +206,7 @@ void SpaceShark::updateAttack(double deltaTime)
 	else if (this->train_separation<=attackDamageDistance) {
 		std::cout << "Attack count " << this->attackCount << std::endl;
 		//TODO: Remove health from train
-		trainHandler->damageTrain(10);
+		trainHandler->damageTrain(20);
 		if (this->attackCount >= this->maxAttackTimes) {
 			this->attackCount = 0;
 			this->scareLevels = 0;
@@ -254,8 +266,9 @@ void SpaceShark::updateBackstage(double deltaTime)
 
 	//Change stage
 	if (!this->canSpawn) return;
-	if ((timeInStage > backStageTimes.y) || ((timeInStage > backStageTimes.x) && (randomInt() >= 6)))
+	if ((timeInStage > backStageTimes.y) || ((timeInStage > backStageTimes.x) && (randomInt() >= 6))) {
 		this->setState(eSharkState::IDLE);
+	}
 	
 		
 }

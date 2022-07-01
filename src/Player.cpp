@@ -352,13 +352,22 @@ void Player::updatePlayerDepo(double seconds_elapsed)
 	
 	Vector3 newPos = oldPos + speedVector;
 	
-
+	
 	if (newPos.x >= 14 || newPos.x <= -25) {
 		speedVector.x = 0;
+		if(newPos.x>=14)
+			newPos.x = 14;
+		if (newPos.x <= -25)
+			newPos.x = -25;
+		
 	}
 
 	if (newPos.z >= 25 || newPos.z <= -12.5) {
 		speedVector.z = 0;
+		if (newPos.z >= 25)
+			newPos.z = 25;
+		if (newPos.z <= -12.5)
+			newPos.z = -12.5;
 	}
 
 

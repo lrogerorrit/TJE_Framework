@@ -60,6 +60,7 @@ public:
 	int getHealth();
 	int getMaxHealth();
 	
+	void setMaxHealth(int num) { this->maxHealth = num; }
 	
 	
 	

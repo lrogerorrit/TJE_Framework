@@ -12,6 +12,7 @@ class Game;
 class InventoryHandler;
 class Player;
 class CubeMap;
+class SoundManager;
 
 enum class eBlockType {
 	Wall1,
@@ -44,8 +45,10 @@ class DepositionStage :
 		int selectedOption = -1;
 		
 		void loadAssets();
+		SoundManager* soundManager;
 		
 	public:
+		bool isFirst = true;
 
 		DepositionStage();
 		DepositionStage(Scene* scene);
@@ -65,6 +68,10 @@ class DepositionStage :
 
 		bool getIsUpgradeGuiVisible(){ return upgradeGuiVisible; }
 		void setIsUpgradeGuiVisible(bool state);
+
+		void reset() {
+			isFirst = true;
+		}
 
 };
 

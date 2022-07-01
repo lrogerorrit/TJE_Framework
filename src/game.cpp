@@ -51,6 +51,10 @@ MeshEntity* playerMesh;
 
 DepositionStage* depoStage = NULL;
 ProceduralWorldStage* proceduralStage = NULL;
+DeathStage* deathStage = NULL;
+WinStage* winStage = NULL;
+MenuStage* menuStage = NULL;
+
 
 Player* player= NULL;
 
@@ -95,7 +99,7 @@ ProceduralWorldStage* testStage() {
 void loadTestCar(Game* game) {
 	trolleyMesh = Mesh::Get("data/assets/train/test_vehicle.obj");
 	trolleyTexture = Texture::Get("data/assets/train/test_vehicle.png");
-	Stage* stage = game->activeStage;
+	Stage* stage = proceduralStage;
 	//Entity* positionEntity = new Entity();
 	Entity* positionEntity = new Entity();
 	MeshEntity* trolleyEntity = new MeshEntity(trolleyMesh,trolleyTexture,Shader::Get("data/shaders/basic.vs","data/shaders/rockShader.fs"));
@@ -122,6 +126,9 @@ DepositionStage* loadTestDepo() {
 void loadStages() {
 	depoStage = loadTestDepo();
 	proceduralStage = testStage();
+	deathStage = new DeathStage();
+	winStage = new WinStage();
+	menuStage = new MenuStage();
 
 	for (auto& item : depoStage->getScene()->root->children)
 		item->ingoreCollision = true;
@@ -193,7 +200,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	player = new Player();
 
-
+	
 	
 
 	
@@ -202,7 +209,7 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	loadStages();
 
 
-	this->setActiveStage(proceduralStage);
+	this->setActiveStage(menuStage);
 
 
 	loadTestCar(this);
@@ -212,7 +219,11 @@ Game::Game(int window_width, int window_height, SDL_Window* window)
 	
 	//ProceduralWorldStage* st = (ProceduralWorldStage*)this->activeStage;
 	proceduralStage->initSpaceShark();
-
+	for (int i = 0; i < 15; ++i) {
+		InventoryHandler::instance->addToInventory(ePickupType::coal);
+		InventoryHandler::instance->addToInventory(ePickupType::gold);
+		InventoryHandler::instance->addToInventory(ePickupType::wood);
+	}
 	
 
 	cameraLocked = true;
@@ -295,7 +306,7 @@ void Game::render(void)
 	//guiManager->doTextButton(Vector2(this->window_width/2.0, this->window_height/2.0), Vector2(300, 300),"hi", Vector4(1, 0, 0, 1));
 
 	//render the FPS, Draw Calls, etc
-	drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
+	//drawText(2, 2, getGPUStats(), Vector3(1, 1, 1), 2);
 
 	//swap between front buffer and back buffer
 	SDL_GL_SwapWindow(this->window);
@@ -303,6 +314,12 @@ void Game::render(void)
 
 void Game::update(double seconds_elapsed)
 {
+	if (this->keyState >= 6 && activeStage!= winStage) {
+		
+		this->moveToStageNum(5);
+		this->keyState = 0;
+		
+	}
 	
 	guiManager->update();
 	float speed = seconds_elapsed * mouse_speed; //the speed is defined by the seconds_elapsed so it goes constant
@@ -373,7 +390,6 @@ void Game::update(double seconds_elapsed)
 	
 
 	SDL_ShowCursor(!cameraLocked && guiManager->getIsGuiOpen());
-	
 	
 	
 	
@@ -519,17 +535,20 @@ void Game::setActiveStage(Stage* stage)
 	this->activeStage = stage;
 }
 
-void Game::moveToStageNum(int num)
+void Game::moveToStageNum(int num,bool isFirst)
 {
 	switch (num) {
 		case 0:
-		//this->setActiveStage(this->stage0); //Menu Stage
+		this->setActiveStage(menuStage); //Menu Stage
 			break;
 		case 1:
 			//this->setActiveStage(this->stage1); //Intro Stage
 			break;
 		case 2:
-			player->position = checkpoint;
+			if (isFirst)
+				proceduralStage->playIntro();
+			else
+				player->position = checkpoint;
 			this->setActiveStage(proceduralStage); //Procedural Stage
 			break;
 		case 3:
@@ -540,7 +559,12 @@ void Game::moveToStageNum(int num)
 			depoStage->onTeleport();
 			break;
 		case 4:
-			//this->setActiveStage(this->stage4); //Death Stage
+			this->setActiveStage(deathStage); //Death Stage
+			depoStage->reset();
+			break;
+		case 5:
+			this->setActiveStage(winStage); //Win Stage
+			depoStage->reset();
 			break;
 		
 	}

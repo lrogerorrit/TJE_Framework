@@ -14,6 +14,7 @@
 #include "../game.h"
 #include "../GUImanager.h"
 
+
 void ProceduralWorldStage::loadAssets() {
 	Mesh::Get("data/assets/rocks/rock1.obj");
 	Mesh::Get("data/assets/rocks/rock2.obj");
@@ -27,7 +28,7 @@ void ProceduralWorldStage::loadAssets() {
 
 void ProceduralWorldStage::generateProceduralScenery()
 {
-	//
+	
 	proceduralParent->removeAllChildren();
 	this->scenery.clear();
 
@@ -66,11 +67,11 @@ void ProceduralWorldStage::generateProceduralScenery()
 
 
 
-			float xDistance = ((random() - .5) * 2.0) * 15.0;
-			float yDistance = ((random() - .5) * 2.0) * 15.0;
+			float xDistance = ((random() - .5) * 2.0) * 30;
+			float yDistance = ((random() - .5) * 2.0) * 30;
 			float zDistance = ((random() - .5) * 2.0) * 1.0;
 
-			if (xDistance >= 0) xDistance += 15; else xDistance -= 15;
+			if (xDistance >= 0) xDistance += 30; else xDistance -= 30;
 			//if (yDistance >= 0) yDistance += 15; else yDistance -= 15;
 
 			//mat.rotate(xAngle, Vector3(1, 0, 0));
@@ -127,6 +128,7 @@ ProceduralWorldStage::ProceduralWorldStage(Scene* scene, TrainHandler* trainHand
 
 ProceduralWorldStage::~ProceduralWorldStage()
 {
+	
 }
 
 void ProceduralWorldStage::initStage()
@@ -183,6 +185,13 @@ ePickupType getPickupTypeFromItem(int type) {
 	switch (type) {
 	case 4:
 		return ePickupType::wood;
+		break;
+	case 5:
+		return ePickupType::gold;
+			break;
+	case 6:
+		return ePickupType::coal;
+		break;
 
 	default:
 		return ePickupType::empty;
@@ -229,6 +238,14 @@ void ProceduralWorldStage::checkHorn() {
 
 void ProceduralWorldStage::update(double deltaTime)
 {
+	if (this->intoTime > 0)
+		this->intoTime -= deltaTime;
+	else
+		if (this->intoTime != -1) {
+			this->intoTime = -1;
+			spaceShark->setCanSpawn(true);
+		}
+
 	
 	if (changeCooldown > 0) {
 		changeCooldown -= deltaTime;
@@ -241,6 +258,7 @@ void ProceduralWorldStage::update(double deltaTime)
 	
 	if (trainHandler->getHealth() == 0) {
 		gameInstance->moveToStageNum(4);
+		return;
 	}
 
 	if (canChangeStage && !inventoryHandler->getIsOpen() && Input::wasKeyPressed(SDL_SCANCODE_B)) {
@@ -301,6 +319,7 @@ void ProceduralWorldStage::update(double deltaTime)
 	//std::cout << trainHandler->getCurveProgress() << "\n";
 	if (trainHandler->getCurveProgress() > .9 && !isPreparingForLoop) {
 		std::cout << "Preparing for loop\n";
+		soundManager->playSound("data/audio/voiceovers/trackLoop.wav", player->position, 1.0);
 		isPreparingForLoop = true;
 	}
 
@@ -324,6 +343,7 @@ void ProceduralWorldStage::renderUI() {
 	
 
 	}
+		guiManager->doText(Vector2(gameInstance->window_width * .7, 60), "I - Inventory", 3);
 		
 	if (isPreparingForLoop && blockerTransparency <1) {
 		guiManager->doFrame(Vector2(gameInstance->window_width / 2, gameInstance->window_height / 2), Vector2(800, 600), Vector4(0, 0, 0, blockerTransparency));
@@ -345,6 +365,19 @@ void ProceduralWorldStage::render()
 	trainHandler->renderHealth();
 	renderUI();
 
+}
+
+void ProceduralWorldStage::playIntro()
+{
+	this->canChangeStage = false;
+	this->changeCooldown = 25; 
+	soundManager->playSound("data/audio/voiceovers/intro.wav", player->position, 1);
+	this->generateProceduralScenery();
+	trainHandler->setCarPosition(0);
+	this->trainHandler->setMaxHealth(100);
+	this->spaceShark->setState(eSharkState::BACKSTAGE);
+	this->inventoryHandler->removeAllFromInventory();
+	this->trainHandler->fixTrain();
 }
 
 sceneryData::sceneryData(std::vector<Vector3>& positions, eSceneryType type, bool useRockShader)

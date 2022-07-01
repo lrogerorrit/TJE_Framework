@@ -88,7 +88,7 @@ public:
 	void setActiveScene(Scene* scene);
 	void setActiveStage(Stage* stage);
 
-	void moveToStageNum(int num);
+	void moveToStageNum(int num,bool isFirst=false);
 };
 
 

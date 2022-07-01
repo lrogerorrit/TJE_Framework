@@ -1,4 +1,4 @@
-#include "DeathStage.h"
+#include "WinStage.h"
 #include "../input.h"
 #include "../game.h"
 #include "../GUImanager.h"
@@ -6,28 +6,28 @@
 #include "../extra/SoundManager.h"
 
 
-DeathStage::DeathStage():Stage()
+WinStage::WinStage():Stage()
 {
 	initStage();
 }
 
-void DeathStage::render()
+void WinStage::render()
 {
 	
 	Vector2 screenCenter = Vector2(gameInstance->window_width / 2, gameInstance->window_height / 2);
 	guiManager->doImage(screenCenter,Vector2(800,600),this->texture);
 }
 
-void DeathStage::update(double elapsed_seconds)
+void WinStage::update(double elapsed_seconds)
 {
 	if (Input::wasKeyPressed(SDL_SCANCODE_SPACE)) {
 		this->gameInstance->moveToStageNum(0);
 	}
 }
 
-void DeathStage::initStage()
+void WinStage::initStage()
 {
-	this->texture= Texture::Get("data/images/death.png");
+	this->texture= Texture::Get("data/images/victory.png");
 	this->guiManager = GUImanager::instance;
 	soundManager = SoundManager::instance;
 }

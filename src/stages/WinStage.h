@@ -4,17 +4,19 @@
 
 class GUImanager;
 class Texture;
+class SoundManager;
 
-class MenuStage :
+class WinStage :
     public Stage
 {
 private:
 	GUImanager* guiManager=NULL;
-	Texture* texture;
+	Texture* texture=NULL;
+	SoundManager* soundManager;
 	
 public:
 	
-	MenuStage();
+	WinStage();
 	
 
 	void render();

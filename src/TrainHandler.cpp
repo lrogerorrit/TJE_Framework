@@ -86,12 +86,12 @@ std::vector<Matrix44> TrainHandler::getTrainDirPos()
 
 void TrainHandler::damageTrain(int damage)
 {
-	this->health = clamp(this->health - damage, 0, 100);
+	this->health = clamp(this->health - damage, 0, maxHealth);
 }
 
 void TrainHandler::fixTrain()
 {
-	this->health = 100;
+	this->health = maxHealth;
 }
 
 void TrainHandler::addToMaxHealth(int quantity)
@@ -187,8 +187,8 @@ bool TrainHandler::getCollidedWithPlayer()
 void TrainHandler::renderHealth()
 {
 	int windowWidth = Game::instance->window_width;
-	Vector2 pos = Vector2(windowWidth * .6, 5);
-	std::string text= "Train Health: " + std::to_string(this->health);
+	Vector2 pos = Vector2(windowWidth * .55, 5);
+	std::string text= "Train Health: " + std::to_string(this->health)+"/"+std::to_string(this->maxHealth);
 	guiManager->doText(pos, text, 3);
 }
 
